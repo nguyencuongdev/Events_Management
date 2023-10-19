@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\EventController;
 
 
 /*
@@ -16,10 +16,26 @@ use App\Http\Controllers\HomeController;
 |
 */
 
+// Route for event management
 Route::get('/',[
-    HomeController::class,
+    EventController::class,
     'index'
 ] );
+
+Route::get('/event/create',[
+    EventController::class,
+    'create'
+]);
+
+Route::get('/event/detail/{slug}',[
+    EventController::class,
+    'detail'
+])->where('slug','[a-z0-9-]+');
+
+Route::post('/event/create',[
+    EventController::class,
+    'handleCreateEvent'
+]);
 
 
 //router for auth
