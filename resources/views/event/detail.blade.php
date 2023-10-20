@@ -25,14 +25,14 @@
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     <div class="border-bottom mb-3 pt-3 pb-2 event-title">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <h1 class="h2">{{ $infor_event->name ?? 'Không xác định' }}</h1>
+            <h1 class="h2">{{ $infor_event->name}}</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
                     <a href="events/edit.html" class="btn btn-sm btn-outline-secondary">Sửa sự kiện</a>
                 </div>
             </div>
         </div>
-        <span class="h6">{{ $infor_event->date ?? 'không xác định' }}</span>
+        <span class="h6">{{ date('d-m-Y',strtotime($infor_event->date)) }}</span>
     </div>
 
     <!-- Tickets -->
@@ -56,7 +56,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body ticket-item">
                     <h5 class="card-title">{{ $ticket_list[$i]->name }}</h5>
-                    <p class="card-text mb-2">Giá: {{ $ticket_list[$i]->cost }}đ</p>
+                    <p class="card-text mb-2">Giá: {{ number_format($ticket_list[$i]->cost,2,'.',',') }}đ</p>
                     @if ($ticket_list[$i]->special_validity)
                     @if (json_decode($ticket_list[$i]->special_validity)->date ?? false)
                     <p class="card-text">
@@ -108,7 +108,10 @@
                 @if(count($session_list) > 0)
                 @foreach ($session_list as $session)
                 <tr>
-                    <td class="text-nowrap">{{ $session->start }} - {{ $session->end }}</td>
+                    <td class="text-nowrap">
+                        {{ date('d-m-Y H:i:s',strtotime($session->start)) }} ->
+                        {{date('d-m-Y H:i:s',strtotime($session->end)) }}
+                    </td>
                     <td>{{ $session->type }}</td>
                     <td><a href="sessions/edit.html">{{ $session->title }}</a></td>
                     <td class="text-nowrap">{{ $session->speaker }}</td>
