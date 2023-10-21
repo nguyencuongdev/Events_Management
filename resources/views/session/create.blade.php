@@ -39,8 +39,8 @@
         </div>
     </div>
 
-    <form class="needs-validation" novalidate action="events/detail.html">
-
+    <form class="needs-validation" novalidate action="/event/new/session/{{ $infor_event->slug }}" method="post">
+        @csrf
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="selectType">Loại</label>
@@ -55,9 +55,10 @@
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputTitle">Tiêu đề</label>
                 <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control is-invalid" id="inputTitle" name="title" placeholder="" value="">
+                <input type="text" class="form-control {{$error['title'] ? 'is-invalid' : ''}}" id="inputTitle"
+                    name="title" placeholder="" value="{{ $data['title'] }}">
                 <div class="invalid-feedback">
-                    Tiêu đề không được để trống.
+                    {{$error['title']}}
                 </div>
             </div>
         </div>
@@ -65,47 +66,67 @@
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputSpeaker">Người trình bày</label>
-                <input type="text" class="form-control" id="inputSpeaker" name="speaker" placeholder="" value="">
+                <input type="text" class="form-control {{$error['speaker'] ? 'is-invalid' : ''}}" id="inputSpeaker"
+                    name="speaker" placeholder="" value="{{ $data['speaker'] }}">
+                <div class="invalid-feedback">
+                    {{ $error['speaker'] }}
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="selectRoom">Phòng</label>
-                <select class="form-control" id="selectRoom" name="room">
-                    <option value="1">Phòng A / Chính</option>
-                    <option value="2">Phòng B / Chính</option>
-                    <option value="3">Phòng C / Phụ</option>
-                    <option value="4">Phòng D / Phụ</option>
+                <select class="form-control {{$error['room'] ? 'is-invalid' : ''}}" id="selectRoom" name="room">
+                    @foreach ($room_list as $room)
+                    <option value="{{ $room->id }}">{{ $room->name }} / {{ $room->capacity }}</option>
+                    @endforeach
                 </select>
+                <div class="invalid-feedback">
+                    {{$error['room']}}
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputCost">Chi phí</label>
-                <input type="number" class="form-control" id="inputCost" name="cost" placeholder="" value="0">
+                <input type="number" class="form-control {{$error['cost'] ? 'is-invalid' : ''}}" id="inputCost"
+                    name="cost" placeholder="" value="{{ $data['cost'] }}">
+                <div class="invalid-feedback">
+                    {{$error['cost']}}
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 col-lg-6 mb-3">
                 <label for="inputStart">Bắt đầu</label>
-                <input type="text" class="form-control" id="inputStart" name="start" placeholder="yyyy-mm-dd HH:MM"
-                    value="">
+                <input type="text" class="form-control {{$error['start'] ? 'is-invalid' : ''}}" id="inputStart"
+                    name="start" placeholder="yyyy-mm-dd HH:MM" value="{{ $data['start'] }}">
+                <div class="invalid-feedback">
+                    {{$error['start']}}
+                </div>
             </div>
             <div class="col-12 col-lg-6 mb-3">
                 <label for="inputEnd">Kết thúc</label>
-                <input type="text" class="form-control" id="inputEnd" name="end" placeholder="yyyy-mm-dd HH:MM"
-                    value="">
+                <input type="text" class="form-control {{$error['end'] ? 'is-invalid' : ''}}" id="inputEnd" name="end"
+                    placeholder="yyyy-mm-dd HH:MM" value="{{ $data['end'] }}">
+                <div class="invalid-feedback">
+                    {{$error['end']}}
+                </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 mb-3">
                 <label for="textareaDescription">Mô tả</label>
-                <textarea class="form-control" id="textareaDescription" name="description" placeholder=""
-                    rows="5"></textarea>
+                <textarea class="form-control {{$error['description'] ? 'is-invalid' : ''}}" id="textareaDescription"
+                    value="{{ $data['description'] }}" name="description" placeholder="" rows="5">
+                </textarea>
+                <div class="invalid-feedback">
+                    {{$error['description']}}
+                </div>
             </div>
         </div>
 

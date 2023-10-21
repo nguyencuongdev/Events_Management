@@ -54,7 +54,7 @@ class EventController extends Controller
         //lấy thông tin nhà tổ chức;
         $currentUser = json_decode($request->cookie('currentUser'));
 
-        $name = $request->input('name');
+        $name = trim($request->input('name'));
         $slug = $request->input('slug');
         $date = $request->input('date');
 
@@ -247,7 +247,7 @@ class EventController extends Controller
             ])
             ->first();
 
-        $name_update = $request->input('name');
+        $name_update = trim($request->input('name'));
         $slug_update = $request->input('slug');
         $date_update = $request->input('date');
 

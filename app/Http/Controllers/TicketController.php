@@ -49,7 +49,7 @@ class TicketController extends Controller
             ])
             ->first();
 
-        $name_ticket = $request->input('name');
+        $name_ticket = trim($request->input('name'));
         $cost_ticket = $request->input('cost');
         $type_specialValidity = $request->input('special_validity');
         $limit_amount = $request->input('limit-amount');
