@@ -157,3 +157,12 @@ main {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
+
+/* create ticket event */
+.limit-amount {
+    display: none;
+}
+
+.limit-time {
+    display: none;
+}

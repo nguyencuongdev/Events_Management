@@ -10,7 +10,9 @@
             <span>{{ $infor_event->name ?? 'không xác định'}}</span>
         </h6>
         <ul class="nav flex-column">
-            <li class="nav-item"><a class="nav-link active" href="#">Tổng quan</a></li>
+            <li class="nav-item">
+                <a class="nav-link active" href="/event/detail/{{ $infor_event->slug }}">Tổng quan</a>
+            </li>
         </ul>
 
         <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -43,7 +45,7 @@
             <h2 class="h4">Vé</h2>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                    <a href="tickets/create.html" class="btn btn-sm btn-outline-secondary">
+                    <a href="/event/new/ticket/{{ $infor_event->slug }}" class="btn btn-sm btn-outline-secondary">
                         Tạo vé mới
                     </a>
                 </div>
@@ -89,7 +91,7 @@
             <h2 class="h4">Phiên</h2>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                    <a href="sessions/create.html" class="btn btn-sm btn-outline-secondary">
+                    <a href="/event/new/session/{{ $infor_event->slug }}" class="btn btn-sm btn-outline-secondary">
                         Tạo phiên mới
                     </a>
                 </div>
@@ -117,7 +119,7 @@
                         {{date('d-m-Y H:i:s',strtotime($session->end)) }}
                     </td>
                     <td>{{ $session->type }}</td>
-                    <td><a href="sessions/edit.html">{{ $session->title }}</a></td>
+                    <td><a href="/event/session/{{ $infor_event->slug }}">{{ $session->title }}</a></td>
                     <td class="text-nowrap">{{ $session->speaker }}</td>
                     <td class="text-nowrap">
                         {{ $session->channel_name }} / {{ $session->room_name }}
