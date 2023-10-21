@@ -17,37 +17,48 @@ use App\Http\Controllers\EventController;
 */
 
 // Route for event management
-Route::get('/',[
+Route::get('/', [
     EventController::class,
     'index'
-] );
-
-Route::get('/event/create',[
-    EventController::class,
-    'create'
 ]);
 
-Route::get('/event/detail/{slug}',[
+Route::get('/event/create', [
     EventController::class,
-    'detail'
-])->where('slug','[a-z0-9-]+');
+    'createEvent'
+]);
 
-Route::post('/event/create',[
+Route::post('/event/create', [
     EventController::class,
     'handleCreateEvent'
 ]);
 
+Route::get('/event/detail/{slug}', [
+    EventController::class,
+    'detailEvent'
+])->where('slug', '[a-z0-9-]+');
+
+Route::get('/event/edit/{slug}', [
+    EventController::class,
+    'editEvent'
+])->where('slug', '[a-z0-9-]+');
+
+Route::put('/event/edit/{slug}', [
+    EventController::class,
+    'handleEditEvent'
+])->where('slug', '[a-z0-9-]+');
+
+
 
 //router for auth
-Route::get('/login',[
+Route::get('/login', [
     AuthController::class,
     'login'
 ]);
-Route::post('/login',[
+Route::post('/login', [
     AuthController::class,
     "handleLogin"
 ]);
-Route::get('/logout',[
-     AuthController::class,
+Route::get('/logout', [
+    AuthController::class,
     "handleLogout"
 ]);

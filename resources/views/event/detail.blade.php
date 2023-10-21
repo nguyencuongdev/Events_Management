@@ -28,7 +28,9 @@
             <h1 class="h2">{{ $infor_event->name}}</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                    <a href="events/edit.html" class="btn btn-sm btn-outline-secondary">Sửa sự kiện</a>
+                    <a href="/event/edit/{{$infor_event->slug}}" class="btn btn-sm btn-outline-secondary">
+                        Sửa sự kiện
+                    </a>
                 </div>
             </div>
         </div>
@@ -60,7 +62,9 @@
                     @if ($ticket_list[$i]->special_validity)
                     @if (json_decode($ticket_list[$i]->special_validity)->date ?? false)
                     <p class="card-text">
-                        Có sẵn đến ngày {{ json_decode($ticket_list[$i]->special_validity)->date }}
+                        Có sẵn đến ngày {{
+                        date('d-m-Y',strtotime(json_decode($ticket_list[$i]->special_validity)->date))
+                        }}
                     </p>
                     @elseif(json_decode($ticket_list[$i]->special_validity)->amount ?? false)
                     <p class="card-text">
