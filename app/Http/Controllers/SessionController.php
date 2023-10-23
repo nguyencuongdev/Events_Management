@@ -20,8 +20,8 @@ class SessionController extends Controller
             ])
             ->first();
 
-        $room_list = DB::table('rooms')
-            ->join('channels', 'channels.id', '=', 'rooms.channel_id')
+        $room_list = DB::table('channels')
+            ->leftJoin('rooms', 'rooms.channel_id', '=', 'channels.id')
             ->where('channels.event_id', '=', $infor_event->id)
             ->selectRaw('channels.name as channel_name, rooms.id, rooms.name')
             ->get();
@@ -64,9 +64,14 @@ class SessionController extends Controller
             ])
             ->first();
 
-        $room_list = DB::table('rooms')
-            ->join('channels', 'channels.id', '=', 'rooms.channel_id')
-            ->where('channels.event_id', '=', $infor_event->id)
+
+        $room_list = DB::table('channels')
+            ->leftJoin('rooms', 'rooms.channel_id', '=', 'channels.id')
+            ->where(
+                'channels.event_id',
+                '=',
+                $infor_event->id
+            )
             ->selectRaw('channels.name as channel_name, rooms.id, rooms.name')
             ->get();
 
@@ -249,14 +254,13 @@ class SessionController extends Controller
             ->first();
 
 
-        $room_list = DB::table('rooms')
-            ->join(
-                'channels',
-                'channels.id',
+        $room_list = DB::table('channels')
+            ->leftJoin('rooms', 'rooms.channel_id', '=', 'channels.id')
+            ->where(
+                'channels.event_id',
                 '=',
-                'rooms.channel_id'
+                $infor_event->id
             )
-            ->where('channels.event_id', '=', $infor_event->id)
             ->selectRaw('channels.name as channel_name, rooms.id, rooms.name')
             ->get();
 
@@ -303,9 +307,13 @@ class SessionController extends Controller
             ])
             ->first();
 
-        $room_list = DB::table('rooms')
-            ->join('channels', 'channels.id', '=', 'rooms.channel_id')
-            ->where('channels.event_id', '=', $infor_event->id)
+        $room_list = DB::table('channels')
+            ->leftJoin('rooms', 'rooms.channel_id', '=', 'channels.id')
+            ->where(
+                'channels.event_id',
+                '=',
+                $infor_event->id
+            )
             ->selectRaw('channels.name as channel_name, rooms.id, rooms.name')
             ->get();
 

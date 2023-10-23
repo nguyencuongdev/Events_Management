@@ -145,7 +145,7 @@
             <h2 class="h4">Kênh</h2>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-                    <a href="channels/create.html" class="btn btn-sm btn-outline-secondary">
+                    <a href="/event/{{ $infor_event->slug }}/new/channel" class="btn btn-sm btn-outline-secondary">
                         Tạo kênh mới
                     </a>
                 </div>

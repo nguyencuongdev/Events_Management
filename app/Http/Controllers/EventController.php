@@ -160,7 +160,7 @@ class EventController extends Controller
         $list_id_channel = array(); // mảng lưu danh sách id của các kênh để truy vấn;
         //lấy ra danh sách channel và số lượng phòng của kênh đó;
         $channel_list = DB::table('channels')
-            ->join('rooms', 'rooms.channel_id', '=', 'channels.id')
+            ->leftJoin('rooms', 'rooms.channel_id', '=', 'channels.id')
             ->where('channels.event_id', '=', $infor_event->id)
             ->selectRaw('channels.id,channels.name, count(rooms.id) as count_room')
             ->groupBy('channels.id', 'channels.name')

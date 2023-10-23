@@ -6,6 +6,8 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\ChannelController;
+
 
 
 /*
@@ -117,6 +119,21 @@ Route::post(
     ]
 )->where('slug', '[a-z0-9-]+');
 
+Route::get(
+    '/event/{slug}/new/channel',
+    [
+        ChannelController::class,
+        'createChannel'
+    ]
+)->where('slug', '[a-z0-9-]+');
+
+Route::post(
+    '/event/{slug}/new/channel',
+    [
+        ChannelController::class,
+        'handleCreateChannel'
+    ]
+)->where('slug', '[a-z0-9-]+');
 
 //router for auth
 Route::get('/login', [
