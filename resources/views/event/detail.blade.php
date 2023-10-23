@@ -119,7 +119,11 @@
                         {{date('d-m-Y H:i:s',strtotime($session->end)) }}
                     </td>
                     <td>{{ $session->type }}</td>
-                    <td><a href="/event/session/{{ $infor_event->slug }}">{{ $session->title }}</a></td>
+                    <td>
+                        <a href="/event/{{ $infor_event->slug }}/session/{{ $session->id }}">
+                            {{ $session->title }}
+                        </a>
+                    </td>
                     <td class="text-nowrap">{{ $session->speaker }}</td>
                     <td class="text-nowrap">
                         {{ $session->channel_name }} / {{ $session->room_name }}
@@ -158,8 +162,8 @@
                         {{$channel_list[$i]->name}}
                     </h5>
                     <p class="card-text">
-                        {{ $count_session_of_rooms[$i]->count}} phiên,
-                        {{$channel_list[$i]->count_room}} phòng
+                        {{ $count_session_of_rooms[$i]->count ?? '0'}} phiên,
+                        {{$channel_list[$i]->count_room ?? '0'}} phòng
                     </p>
                 </div>
             </div>

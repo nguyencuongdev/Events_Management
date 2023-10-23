@@ -80,20 +80,26 @@ Route::post(
 )->where('slug', '[a-z0-9-]+');
 
 Route::get(
-    '/event/session/{slug}',
+    '/event/{slug}/session/{id}',
     [
         SessionController::class,
         'editSession'
     ]
-)->where('slug', '[a-z0-9-]+');
+)->where([
+    'slug' => '[a-z0-9-]+',
+    'id' => '\d+'
+]);
 
 Route::put(
-    '/event/session/{slug}',
+    '/event/{slug}/session/{id}',
     [
         SessionController::class,
         'handleEditSession'
     ]
-)->where('slug', '[a-z0-9-]+');
+)->where([
+    'slug' => '[a-z0-9-]+',
+    'id' => '\d+'
+]);
 
 //router for auth
 Route::get('/login', [

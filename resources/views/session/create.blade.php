@@ -76,10 +76,10 @@
 
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
-                <label for="selectRoom">Phòng</label>
+                <label for="selectRoom">Kênh / Phòng</label>
                 <select class="form-control {{$error['room'] ? 'is-invalid' : ''}}" id="selectRoom" name="room">
                     @foreach ($room_list as $room)
-                    <option value="{{ $room->id }}">{{ $room->name }} / {{ $room->capacity }}</option>
+                    <option value="{{ $room->id }}">{{ $room->channel_name }} / {{ $room->name }}</option>
                     @endforeach
                 </select>
                 <div class="invalid-feedback">
@@ -122,7 +122,8 @@
             <div class="col-12 mb-3">
                 <label for="textareaDescription">Mô tả</label>
                 <textarea class="form-control {{$error['description'] ? 'is-invalid' : ''}}" id="textareaDescription"
-                    value="{{ $data['description'] }}" name="description" placeholder="" rows="5">
+                    name="description" placeholder="" rows="5">
+                    {{ $data['description'] }}
                 </textarea>
                 <div class="invalid-feedback">
                     {{$error['description']}}

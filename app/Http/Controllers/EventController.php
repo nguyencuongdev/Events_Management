@@ -179,11 +179,7 @@ class EventController extends Controller
             ->join('channels', 'channels.id', '=', 'rooms.channel_id')
             ->whereIn('channels.id', $list_id_channel)
             ->select(
-                'sessions.title',
-                'sessions.speaker',
-                'sessions.start',
-                'sessions.end',
-                'sessions.type',
+                'sessions.*',
                 'channels.name as channel_name',
                 'rooms.name as room_name',
             )
