@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SessionController;
-
+use App\Http\Controllers\RoomController;
 
 
 /*
@@ -100,6 +100,23 @@ Route::put(
     'slug' => '[a-z0-9-]+',
     'id' => '\d+'
 ]);
+
+Route::get(
+    '/event/{slug}/new/room',
+    [
+        RoomController::class,
+        'createRoom'
+    ]
+)->where('slug', '[a-z0-9-]+');
+
+Route::post(
+    '/event/{slug}/new/room',
+    [
+        RoomController::class,
+        'handleCreateRoom'
+    ]
+)->where('slug', '[a-z0-9-]+');
+
 
 //router for auth
 Route::get('/login', [
