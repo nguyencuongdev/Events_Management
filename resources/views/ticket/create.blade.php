@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -107,7 +108,7 @@
     const selectElement = document.querySelector('#selectSpecialValidity');
     const elementLimitAmount = document.querySelector('.limit-amount');
     const elementLimitTime = document.querySelector('.limit-time');
-
+    
     if(selectElement.value == 'amount'){
         elementLimitTime.style.display = 'none';
         elementLimitAmount.style.display = 'block';
@@ -124,14 +125,19 @@
         let value = e.target.value;
         if(value == 'amount'){ 
             elementLimitTime.style.display = 'none';
+            elementLimitTime.querySelector('input').value = '';
             elementLimitAmount.style.display = 'block';
         }
         else if(value == 'date'){
             elementLimitAmount.style.display = 'none';
+            elementLimitAmount.querySelector('input').value= '0';
             elementLimitTime.style.display = 'block';
         }else{
             elementLimitAmount.style.display = 'none';
             elementLimitTime.style.display = 'none';
+            elementLimitTime.querySelector('input').value  = '';
+            elementLimitAmount.querySelector('input').value = '0';
         }
     })
 </script>
+@endsection

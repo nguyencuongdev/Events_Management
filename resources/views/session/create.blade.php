@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -122,9 +123,7 @@
             <div class="col-12 mb-3">
                 <label for="textareaDescription">Mô tả</label>
                 <textarea class="form-control {{$error['description'] ? 'is-invalid' : ''}}" id="textareaDescription"
-                    name="description" placeholder="" rows="5">
-                    {{ $data['description'] }}
-                </textarea>
+                    name="description" placeholder="" rows="5">{{ $data['description'] }}</textarea>
                 <div class="invalid-feedback">
                     {{$error['description']}}
                 </div>
@@ -133,7 +132,9 @@
 
         <hr class="mb-4">
         <button class="btn btn-primary" type="submit">Lưu phiên</button>
-        <a href="events/detail.html" class="btn btn-link">Bỏ qua</a>
+        <a href="/event/detail/{{ $infor_event->slug }}" class="btn btn-link">Bỏ qua</a>
     </form>
 
 </main>
+
+@endsection

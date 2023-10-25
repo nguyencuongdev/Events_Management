@@ -44,33 +44,32 @@
                     {{ $error['name'] }}
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputSlug">Slug</label>
-                <input type="text" class="form-control {{ $error['slug'] ? 'is-invalid' : '' }}" name="slug"
-                    id="inputSlug" placeholder="" value="{{ $data['slug'] }}">
-                <div class="invalid-feedback">
-                    {{ $error['slug'] }}
+            <div class="row">
+                <div class="col-12 col-lg-4 mb-3">
+                    <label for="inputSlug">Slug</label>
+                    <input type="text" class="form-control {{ $error['slug'] ? 'is-invalid' : '' }}" name="slug"
+                        id="inputSlug" placeholder="" value="{{ $data['slug'] }}">
+                    <div class="invalid-feedback">
+                        {{ $error['slug'] }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputDate">Ngày</label>
-                <input type="text" class="form-control {{ $error['date'] ? 'is-invalid' : '' }}" name="date"
-                    id="inputDate" placeholder="yyyy-mm-dd" value="{{$data['date'] }}">
-                <div class="invalid-feedback">
-                    {{ $error['date'] }}
+            <div class="row">
+                <div class="col-12 col-lg-4 mb-3">
+                    <label for="inputDate">Ngày</label>
+                    <input type="text" class="form-control {{ $error['date'] ? 'is-invalid' : '' }}" name="date"
+                        id="inputDate" placeholder="yyyy-mm-dd" value="{{$data['date'] }}">
+                    <div class="invalid-feedback">
+                        {{ $error['date'] }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <hr class="mb-4">
-        <button class="btn btn-primary" type="submit">Lưu</button>
-        <a href="/event/detail/{{ $infor_event->slug }}" class="btn btn-link">Bỏ qua</a>
+            <hr class="mb-4">
+            <button class="btn btn-primary" type="submit">Lưu</button>
+            <a href="/event/detail/{{ $infor_event->slug }}" class="btn btn-link">Bỏ qua</a>
     </form>
 
 </main>

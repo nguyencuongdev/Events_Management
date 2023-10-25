@@ -4,7 +4,7 @@
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="events/index.html">Quản lý sự kiện</a>
+                <a class="nav-link active" href="/">Quản lý sự kiện</a>
             </li>
         </ul>
     </div>
@@ -27,7 +27,7 @@
                 <a href="/event/detail/{{ $event->slug }}" class="btn text-left event">
                     <div class="card-body">
                         <h5 class="card-title">{{ $event->name }}</h5>
-                        <p class="card-subtitle">{{ $event->date }}</p>
+                        <p class="card-subtitle">{{ date('d-m-Y',strtotime($event->date)) }}</p>
                         <hr />
                         <p class="card-text">{{ $event->registration_count }} người đăng ký</p>
                     </div>

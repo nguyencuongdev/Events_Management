@@ -19,7 +19,11 @@
             <span>Báo cáo</span>
         </h6>
         <ul class="nav flex-column mb-2">
-            <li class="nav-item"><a class="nav-link" href="reports/index.html">Công suất phòng</a></li>
+            <li class="nav-item">
+                <a class="nav-link" href="/event/{{ $infor_event->slug }}/report/capacity/room">
+                    Công suất phòng
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
@@ -60,7 +64,7 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body ticket-item">
                     <h5 class="card-title">{{ $ticket_list[$i]->name }}</h5>
-                    <p class="card-text mb-2">Giá: {{ number_format($ticket_list[$i]->cost,2,'.',',') }}đ</p>
+                    <p class="card-text mb-2">Giá: {{ number_format($ticket_list[$i]->cost,0,'.',',') }} đ</p>
                     @if ($ticket_list[$i]->special_validity)
                     @if (json_decode($ticket_list[$i]->special_validity)->date ?? false)
                     <p class="card-text">

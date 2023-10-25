@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -81,5 +82,5 @@
         <button class="btn btn-primary" type="submit">Lưu phòng</button>
         <a href="/event/detail/{{ $infor_event->slug }}" class="btn btn-link">Bỏ qua</a>
     </form>
-
 </main>
+@endsection

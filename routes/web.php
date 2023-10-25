@@ -7,6 +7,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\ChannelController;
+use App\Http\Controllers\ReportController;
 
 
 
@@ -103,6 +104,8 @@ Route::put(
     'id' => '\d+'
 ]);
 
+
+//Route for rooms management of event;
 Route::get(
     '/event/{slug}/new/room',
     [
@@ -119,6 +122,8 @@ Route::post(
     ]
 )->where('slug', '[a-z0-9-]+');
 
+
+//Route for channel management of event
 Route::get(
     '/event/{slug}/new/channel',
     [
@@ -134,6 +139,11 @@ Route::post(
         'handleCreateChannel'
     ]
 )->where('slug', '[a-z0-9-]+');
+
+Route::get('/event/{slug}/report/capacity/room', [
+    ReportController::class,
+    'index'
+])->where('slug', '[a-z0-9-]+');
 
 //router for auth
 Route::get('/login', [

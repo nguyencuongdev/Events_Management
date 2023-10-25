@@ -85,11 +85,11 @@ class EventController extends Controller
         //kiểm tra xem slug có hợp lệ không;
         //Ngày diễn ra sự kiện có hợp lệ không;
         $currentDate = date('Y-m-d');
-        $regx = '/^[^a-z0-9-]+$/';
-        $regx_date = "/^\d{4}(-)\d{2}-\d{2}$/";
+        $regx = '/^[a-z0-9-]+$/';
+        $regx_date = "/^\d{4}-\d{1,2}-\d{1,2}$/";
 
-        if (preg_match($regx, $slug)) $error_slug = "Slug chỉ được chứa các ký tự a-z, 0-9 và '-'";
-        if (!preg_match($regx_date, $date) && strtotime($currentDate) > strtotime($date))
+        if (!preg_match($regx, $slug)) $error_slug = "Slug chỉ được chứa các ký tự a-z, 0-9 và '-'";
+        if (!preg_match($regx_date, $date) && (strtotime($currentDate) > strtotime($date)))
             $error_date = "Ngày diễn ra sự kiện không hợp lệ!";
         if ($error_slug || $error_date) {
             return view('event.create', [
