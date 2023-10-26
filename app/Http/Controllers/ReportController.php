@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Events;
+use App\Models\Room;
 
 class ReportController extends Controller
 {
@@ -12,14 +14,8 @@ class ReportController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = DB::table('events')
-            ->where([
-                ['events.organizer_id', '=', $currentUser->id],
-                ['events.slug', '=', $slug]
-            ])
-            ->first();
-
-        $capacity_rooms = DB::table('rooms')->orderBy('rooms.id', 'asc')->get();
+        $infor_event = Events::getInforEvent($currentUser->id, $slug);
+        $capacity_rooms = Room::getCapacityRooms();
         return view('report.index', [
             'currentUser' => $currentUser,
             'infor_event' => $infor_event

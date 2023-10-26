@@ -2,61 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
-use App\Models\Attendees;
+use App\Models\Organizers;
 use Illuminate\Support\Facades\Cookie;
-// use Illuminate\Support\Facades\DB;
-
 
 class AuthController extends Controller
 {
 
-    public function login(){
-        return view('auth.login',[
+    public function login()
+    {
+        return view('auth.login', [
             "error" => ""
         ]);
     }
 
-    public function handleLogin(Request $request){
-        try{
+    public function handleLogin(Request $request)
+    {
+        try {
             $email = $request->input('email');
             $password = $request->input('password');
-            if(!$email || !$password) {
-                return view('auth.login',[
+            if (!$email || !$password) {
+                return view('auth.login', [
                     "error" => "Email hoặc mật khẩu không được để trống!"
                 ]);
             }
-            $check = \DB::table('organizers')
-                        ->where('email','=',$email)
-                        ->first();
-            if(!$check){
-                return view('auth.login',[
-                    "error" => "Email không chính xác!"
+            $check_infor = Organizers::getInforOrganizer($email);
+            if (!$check_infor) {
+                return view('auth.login', [
+                    "error" => "Tên đăng nhập hoặc mật khẩu không chính xác!"
                 ]);
             }
-            if($check->password_hash == $password){
+            if ($check_infor->password_hash == $password) {
                 $currentUser = [
-                    "id" => $check->id,
-                    "name" => $check->name,
-                    "slug" => $check->slug,
-                    "email" => $check->email
+                    "id" => $check_infor->id,
+                    "name" => $check_infor->name,
+                    "slug" => $check_infor->slug,
+                    "email" => $check_infor->email
                 ];
-                Cookie::queue('currentUser', \json_encode($currentUser));
+                Cookie::queue('currentUser', json_encode($currentUser));
                 return redirect('/');
             }
-            else{
-                 return view('auth.login',[
-                    'error'=> 'Mật khẩu không chính xác!'
-                ]);
-            }
-        }
-        catch(Exception $ex){
-            echo 'Error: ' . $ex->getMessage;
+            return view('auth.login', [
+                'error' => 'Tên đăng nhập hoặc mật khẩu không chính xác!'
+            ]);
+        } catch (Exception $ex) {
         }
     }
 
 
-    function handleLogout(Request $request){
+    function handleLogout()
+    {
         //xóa cookie và điều hường về trang login; 
         //xóa cookie currentUser và giữ nguyên các cookie khác;
         Cookie::queue(Cookie::forget('currentUser'));

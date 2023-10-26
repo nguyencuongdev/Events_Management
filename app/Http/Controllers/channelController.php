@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Channels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class channelController extends Controller
+use App\Models\Events;
+
+class ChannelController extends Controller
 {
     public function createChannel(Request $request, $slug)
     {
@@ -14,13 +17,7 @@ class channelController extends Controller
         if (!$currentUser) return redirect('/login');
 
         //thông tin sự kiện
-        $infor_event = DB::table('events')
-            ->where([
-                ['events.slug', '=', $slug],
-                ['events.organizer_id', '=', $currentUser->id]
-            ])
-            ->first();
-
+        $infor_event = Events::getInforEvent($currentUser->id, $slug);
         return view('channel.create', [
             'currentUser' => $currentUser,
             'infor_event' =>  $infor_event,
@@ -40,64 +37,26 @@ class channelController extends Controller
         if (!$currentUser) return redirect('/login');
 
         //thông tin sự kiện
-        $infor_event = DB::table('events')
-            ->where([
-                ['events.slug', '=', $slug],
-                ['events.organizer_id', '=', $currentUser->id]
-            ])
-            ->first();
+        $infor_event = Events::getInforEvent($currentUser->id, $slug);
+        $error_name = '';
         $channel_name = trim($request->input('name'));
-        if (!$channel_name) {
+        if (!$channel_name) $error_name = 'Tên channel không được để trống!';
+        $check_channel = Channels::getInforChannel($infor_event->id, $channel_name);
+        if ($check_channel) $error_name = 'Kênh đã tồn tại!';
+
+        if ($error_name) {
             return view('channel.create', [
                 'currentUser' => $currentUser,
-                'infor_event' =>  $infor_event,
+                'infor_event' => $infor_event,
                 'error' => [
-                    'name' => 'Tên không được để trống!',
+                    'name' => $error_name,
                 ],
                 'data' => [
-                    'name' => $channel_name,
+                    'name' => $channel_name
                 ]
             ]);
         }
-
-        $check_channel = DB::table('channels')
-            ->where([
-                ['channels.event_id', '=', $infor_event->id],
-                ['channels.name', '=', $channel_name]
-            ])
-            ->first();
-        if ($check_channel) {
-            return view('channel.create', [
-                'currentUser' => $currentUser,
-                'infor_event' =>  $infor_event,
-                'error' => [
-                    'name' => 'Kênh đã tồn tại!',
-                ],
-                'data' => [
-                    'name' => $channel_name,
-                ]
-            ]);
-        }
-
-        $insert_channel = DB::table('channels')
-            ->insert([
-                'event_id' => $infor_event->id,
-                'name' => $channel_name,
-            ]);
-
-        if ($insert_channel) {
-            return redirect('/event/detail/' . $slug);
-        } else {
-            return view('channel.create', [
-                'currentUser' => $currentUser,
-                'infor_event' =>  $infor_event,
-                'error' => [
-                    'name' => '',
-                ],
-                'data' => [
-                    'name' => '',
-                ]
-            ]);
-        }
+        Channels::createChannel($infor_event->id, $channel_name);
+        return redirect('/event/detail/' . $slug);
     }
 }
