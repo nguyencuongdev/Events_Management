@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Events;
+use App\Models\Event;
 use App\Models\Room;
 
 class ReportController extends Controller
@@ -14,7 +13,7 @@ class ReportController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = Events::getInforEvent($currentUser->id, $slug);
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
         $capacity_rooms = Room::getCapacityRooms();
         return view('report.index', [
             'currentUser' => $currentUser,

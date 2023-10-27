@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 
-class Organizers extends Model
+class Organizer extends Model
 {
     use HasFactory;
 

@@ -65,4 +65,36 @@ class Session extends Model
         } catch (Exception $ex) {
         }
     }
+
+    public static function getInforSession($session_id)
+    {
+        try {
+            $infor_session =  DB::table('sessions')
+                ->where('sessions.id', '=', $session_id)
+                ->first();
+            return $infor_session;
+        } catch (Exception $ex) {
+        }
+    }
+
+
+    public static function updateSession($room_id, $session_id, $infor_session_update)
+    {
+        try {
+            $status = DB::table('sessions')
+                ->where('id', $session_id)
+                ->update([
+                    'room_id' => $room_id,
+                    'title' => $infor_session_update['title'],
+                    'description' => $infor_session_update['description'],
+                    'speaker' => $infor_session_update['speaker'],
+                    'start' => $infor_session_update['start'],
+                    'end' => $infor_session_update['end'],
+                    'type' => $infor_session_update['type'],
+                    'cost' => $infor_session_update['cost'],
+                ]);
+            return $status;
+        } catch (Exception $ex) {
+        }
+    }
 }

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Event;
+use App\Models\Ticket;
 
 class TicketController extends Controller
 {
@@ -13,13 +14,7 @@ class TicketController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = DB::table('events')
-            ->where([
-                ['events.slug', '=', $slug],
-                ['events.organizer_id', '=', $currentUser->id]
-            ])
-            ->first();
-
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
         return view('ticket.create', [
             'currentUser' => $currentUser,
             'infor_event' => $infor_event,
@@ -41,13 +36,8 @@ class TicketController extends Controller
         //lấy thông tin nhà tổ chức;
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
-        //thông tin sự kiện
-        $infor_event = DB::table('events')
-            ->where([
-                ['events.slug', '=', $slug],
-                ['events.organizer_id', '=', $currentUser->id]
-            ])
-            ->first();
+
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
 
         $name_ticket = trim($request->input('name'));
         $cost_ticket = $request->input('cost');
@@ -73,6 +63,7 @@ class TicketController extends Controller
             $error_specialValidity =
                 'Ngày mua vé không được để trống và ngày mua phải trước ngày diễn ra sự kiện!';
         }
+
         if ($error_name || $error_cost || $error_specialValidity) {
             return view('ticket.create', [
                 'currentUser' => $currentUser,
@@ -104,32 +95,13 @@ class TicketController extends Controller
             ]);
         }
 
+        $infor_ticket = [
+            'name' => $name_ticket,
+            'cost' => $cost_ticket,
+            'special_validity' =>  $valueSpeacialValidity
+        ];
         //Lưu vé vào trong DB;
-        $insert_ticket = DB::table('event_tickets')
-            ->insert([
-                'event_id' => $infor_event->id,
-                'name' => $name_ticket,
-                'cost' => $cost_ticket,
-                'special_validity' => $valueSpeacialValidity
-            ]);
-
-        if ($insert_ticket)
-            return redirect('/event/detail/' . $infor_event->slug);
-        else {
-            return view('ticket.create', [
-                'currentUser' => $currentUser,
-                'infor_event' => $infor_event,
-                'error' => [
-                    'name' => $error_name,
-                    'cost' => $error_cost,
-                    'specialValidity' =>  $error_specialValidity
-                ],
-                'data' => [
-                    'name' => $name_ticket,
-                    'cost' => $cost_ticket,
-                    'type_specialValidity' => $type_specialValidity
-                ]
-            ]);
-        }
+        Ticket::createTicket($infor_event->id, $infor_ticket);
+        return redirect('/event/detail/' . $infor_event->slug);
     }
 }

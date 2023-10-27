@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Events;
-use App\Models\Tickets;
-use App\Models\Channels;
+use App\Models\Event;
+use App\Models\Ticket;
+use App\Models\Channel;
 use App\Models\Room;
 use App\Models\Session;
 
@@ -20,7 +20,7 @@ class EventController extends Controller
         if (!$currentUser) return redirect('/login');
 
         //lấy ra danh sách các sự kiện của nhà tổ chức
-        $events = Events::getEventsOfOrganizer($currentUser->id);
+        $events = Event::getEventsOfOrganizer($currentUser->id);
 
         return view('event.index', [
             'currentUser' => $currentUser,
@@ -78,7 +78,7 @@ class EventController extends Controller
             $error_date = "Ngày diễn ra sự kiện không hợp lệ!";
 
         //kiểm tra xem slug đã tồn tại chưa;
-        $check_slug = Events::getInforEvent($currentUser->id, $slug);
+        $check_slug = Event::getInforEvent($currentUser->id, $slug);
         if ($check_slug) $error_slug = "Slug đã được sử dụng";
         if ($error_name || $error_slug || $error_date) {
             return view('event.create', [
@@ -97,7 +97,7 @@ class EventController extends Controller
         }
 
         //save
-        Events::createEvent($currentUser->id, $name, $slug, $date);
+        Event::createEvent($currentUser->id, $name, $slug, $date);
         return redirect('/event/detail/' . $slug);
     }
 
@@ -107,11 +107,11 @@ class EventController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = Events::getInforEvent($currentUser->id, $slug);
-        $ticket_list = Tickets::getTicketsOfEvent($infor_event->id);
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
+        $ticket_list = Ticket::getTicketsOfEvent($infor_event->id);
 
         $list_id_channel = array(); // mảng lưu danh sách id các kênh để truy vấn;
-        $channel_list = Channels::getChannelsOfEvent($infor_event->id);
+        $channel_list = Channel::getChannelsOfEvent($infor_event->id);
         for ($i = 0; $i < count($channel_list); $i++) {
             array_push($list_id_channel, $channel_list[$i]->id);
         }
@@ -137,7 +137,7 @@ class EventController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = Events::getInforEvent($currentUser->id, $slug);
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
         return view('event.edit', [
             'currentUser' => $currentUser,
             'infor_event' =>  $infor_event,
@@ -160,7 +160,7 @@ class EventController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = Events::getInforEvent($currentUser->id, $slug);
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
 
         $name_update = trim($request->input('name'));
         $slug_update = $request->input('slug');
@@ -188,7 +188,7 @@ class EventController extends Controller
             $error_date = "Ngày diễn ra sự kiện không hợp lệ!";
 
         //kiểm tra xem slug đã tồn tại chưa;
-        $check_slug = Events::getInforEvent($currentUser->id, $slug_update);
+        $check_slug = Event::getInforEvent($currentUser->id, $slug_update);
         if ($check_slug && $check_slug->slug !== $slug_update)
             $error_slug = "Slug đã tồn tại cho 1 events khác!";
 
@@ -220,7 +220,7 @@ class EventController extends Controller
                 'slug' => $slug_update,
                 'date' => $date_update
             ];
-            Events::updateInforEvent($currentUser->id, $slug, $infor_event_update);
+            Event::updateInforEvent($currentUser->id, $slug, $infor_event_update);
         }
         return redirect('/event/detail/' . $slug_update);
     }

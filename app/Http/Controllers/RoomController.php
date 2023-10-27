@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\Events;
-use App\Models\Channels;
+use App\Models\Event;
+use App\Models\Channel;
 use App\Models\Room;
 
 
@@ -17,8 +16,8 @@ class RoomController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = Events::getInforEvent($currentUser->id, $slug);
-        $channel_list = Channels::getChannelsOfEvent($infor_event->id);
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
+        $channel_list = Channel::getChannelsOfEvent($infor_event->id);
         return view('room.create', [
             'currentUser' => $currentUser,
             'infor_event' =>  $infor_event,
@@ -41,8 +40,8 @@ class RoomController extends Controller
         $currentUser = json_decode($request->cookie('currentUser'));
         if (!$currentUser) return redirect('/login');
 
-        $infor_event = Events::getInforEvent($currentUser->id, $slug);
-        $channel_list = Channels::getChannelsOfEvent($infor_event->id);
+        $infor_event = Event::getInforEvent($currentUser->id, $slug);
+        $channel_list = Channel::getChannelsOfEvent($infor_event->id);
 
         $room_name = trim($request->input('name'));
         $id_channel = $request->input('channel');

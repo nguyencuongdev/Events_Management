@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\Organizers;
 use Illuminate\Support\Facades\Cookie;
+use App\Models\Organizer;
 
 class AuthController extends Controller
 {
@@ -27,7 +27,7 @@ class AuthController extends Controller
                     "error" => "Email hoặc mật khẩu không được để trống!"
                 ]);
             }
-            $check_infor = Organizers::getInforOrganizer($email);
+            $check_infor = Organizer::getInforOrganizer($email);
             if (!$check_infor) {
                 return view('auth.login', [
                     "error" => "Tên đăng nhập hoặc mật khẩu không chính xác!"
