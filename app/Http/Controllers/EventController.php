@@ -110,15 +110,10 @@ class EventController extends Controller
         $infor_event = Event::getInforEvent($currentUser->id, $slug);
         $ticket_list = Ticket::getTicketsOfEvent($infor_event->id);
 
-        $list_id_channel = array(); // mảng lưu danh sách id các kênh để truy vấn;
         $channel_list = Channel::getChannelsOfEvent($infor_event->id);
-        for ($i = 0; $i < count($channel_list); $i++) {
-            array_push($list_id_channel, $channel_list[$i]->id);
-        }
-
-        $room_list = Room::getRoomsOfEvent($list_id_channel);
-        $session_list = Session::getSessionsOfEvent($list_id_channel);
-        $count_session_of_channels = Session::getCountSessionOfChannles($list_id_channel);
+        $room_list = Room::getRoomsOfEvent($infor_event->id);
+        $session_list = Session::getSessionsOfEvent($infor_event->id);
+        $count_session_of_channels = Session::getCountSessionOfChannles($infor_event->id);
 
         return view('event.detail', [
             'currentUser' => $currentUser,

@@ -50,31 +50,33 @@
 </main>
 <script src="{{ asset('assets/js/Chart.min.js') }}"></script>
 <script>
-    // Dữ liệu về các session và các giá trị tương ứng
-    // Dữ liệu về các session và các giá trị tương ứng
-   const sessions = ["Session 1", "Session 2", "Session 3", "Session 4"];
-   const capacities = [50, 70, 60, 80]; // Công suất của phòng
-   const attendees = [45, 60, 55, 75]; // Số lượng người tham dự đã đăng ký
+    const list_session = @json($list_sessions);
+    const sessions = list_session.map(session => session.title);
 
-   const ctx = document.querySelector('#myBarChart').getContext('2d');
-   const barChart = new Chart(ctx,{
+    const capacity_list = @json($capacity_rooms);
+    const capacities = capacity_list.map(capacity =>  capacity.capacity);
+
+    const attendee_list = @json($list_count_attendee);
+    const attendees = attendee_list.map(attendee => attendee.count_attendess);
+    
+    const ctx = document.querySelector('#myBarChart').getContext('2d');
+    const barChart = new Chart(ctx,{
         type: 'bar',
         data: {
             labels: sessions,
             datasets: [
-                {
-                    label: 'Công suất phòng',
-                    data: capacities,
-                    backgroundColor: '#38bdf8',
-                },
                 {
                     label: 'Số lượng người tham dự đã đăng ký',
                     data: attendees,
                     backgroundColor: attendees.map((attendee,index) =>
                         (attendee > capacities[index]) ? 'red' : '#14b8a6'
                     )
-
-                }
+                },
+                {
+                    label: 'Công suất phòng',
+                    data: capacities,
+                    backgroundColor: '#38bdf8',
+                },
             ]
         },
         options: {
@@ -92,16 +94,13 @@
                     beginAtZero: true,
                     title: {
                        enabled: true,
-                        text: 'Số lượng người tham dự'
+                        text: 'Công suất phòng'
                     }
                 }
             },
             legend: {
                 display:true,
                 position: 'right',
-            },
-            tooltips:{
-               enabled: false,
             }
         }
    })

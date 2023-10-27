@@ -26,12 +26,13 @@ class Room extends Model
         } catch (Exception $ex) {
         }
     }
-    public static function getRoomsOfEvent($list_channel_id = [])
+    public static function getRoomsOfEvent($event_id)
     {
         try {
             //lấy ra danh sách các room diễn ra các kênh của sự kiện
             $room_list = DB::table('rooms')
-                ->whereIn('rooms.channel_id', $list_channel_id)
+                ->join('channels', 'channels.id', '=', 'rooms.channel_id')
+                ->where('channels.event_id', '=', $event_id)
                 ->select('rooms.name', 'rooms.capacity')
                 ->get();
             return $room_list;
