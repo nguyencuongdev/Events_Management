@@ -80,7 +80,9 @@
                 <label for="selectRoom">Kênh / Phòng</label>
                 <select class="form-control {{$error['room'] ? 'is-invalid' : ''}}" id="selectRoom" name="room">
                     @foreach ($room_list as $room)
-                    <option value="{{ $room->id }}">{{ $room->channel_name }} / {{ $room->name }}</option>
+                    <option value="{{ $room->id }}" {{ ($data['room']==$room->id) ? 'selected' : '' }}>
+                        {{ $room->channel_name }} / {{ $room->name }}
+                    </option>
                     @endforeach
                 </select>
                 <div class="invalid-feedback">

@@ -158,6 +158,7 @@ class SessionController extends Controller
             'data' => [
                 'id' => $infor_session->id,
                 'title' => $infor_session->title,
+                'room' => $infor_session->room_id,
                 'speaker' => $infor_session->speaker,
                 'cost' => $infor_session->cost,
                 'start' => $infor_session->start,
