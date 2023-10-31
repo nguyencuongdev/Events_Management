@@ -39,4 +39,29 @@ class Ticket extends Model
         } catch (Exception $ex) {
         }
     }
+
+    public static function verifyTicket($ticket_id, $registration_time)
+    {
+        try {
+            $infor_ticket = DB::table('event_tickets')->where('event_tickets.id', $ticket_id)->first();
+            $check_ticket = true;
+            if ($infor_ticket) {
+                $special_validity = $infor_ticket->special_validity ?? null;
+                if ($special_validity) {
+                    $value_special_validity = json_decode($special_validity);
+                    switch ($value_special_validity->type) {
+                        case 'amount':
+                            $check_ticket = $value_special_validity->amount > 0 ? true : false;
+                            break;
+                        case 'date':
+                            $check_ticket =  strtotime($value_special_validity->date) >
+                                strtotime($registration_time) ? true : false;
+                            break;
+                    }
+                } else $check_ticket = true;
+            } else $check_ticket = false;
+            return $check_ticket;
+        } catch (Exception $ex) {
+        }
+    }
 }

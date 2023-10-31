@@ -13,6 +13,11 @@ class Event extends Model
     protected $table = 'events';
     protected $prima_key = 'id';
 
+    public function organizer()
+    {
+        return $this->belongsTo(Organizer::class)->select('id', 'name', 'slug');
+    }
+
     public static function getEventsOfOrganizer($organzer_id)
     {
         try {
@@ -74,5 +79,68 @@ class Event extends Model
                 ]);
         } catch (Exception $ex) {
         }
+    }
+
+
+    //Function handler controller for api routes;
+    public static function getEvents()
+    {
+        try {
+            $events = Event::with('organizer')->where('events.date', '>=', date('Y/m/d'))->get();
+            return $events;
+        } catch (Exception $e) {
+        }
+    }
+
+
+    public static function getInforDetailEvent($organizer_slug, $event_slug)
+    {
+        $infor_organizer = Organizer::where('organizers.slug', $organizer_slug)->first();
+        $infor_event = Event::getInforEvent($infor_organizer->id, $event_slug);
+        $event = [
+            'id' => $infor_event->id,
+            'name' => $infor_event->name,
+            'slug' => $infor_event->slug,
+            'date' => $infor_event->date,
+            'channels' => [],
+            'tickets' => [],
+        ];
+        $channel_list = DB::table('channels')
+            ->where('channels.event_id', '=', $infor_event->id)
+            ->select('channels.id', 'channels.name')
+            ->get();
+        for ($i = 0; $i < count($channel_list); $i++) {
+            $infor_channel = [
+                'id' => $channel_list[$i]->id,
+                'name' => $channel_list[$i]->name,
+                'rooms' => []
+            ];
+            $room_list = DB::table('rooms')
+                ->where('rooms.channel_id', $channel_list[$i]->id)
+                ->select('rooms.id', 'rooms.name', 'rooms.capacity')
+                ->get();
+            for ($i = 0; $i < count($room_list); $i++) {
+                $infor_room = [
+                    'id' => $room_list[$i]->id,
+                    'name' => $room_list[$i]->name,
+                    'capacity' => $room_list[$i]->capacity,
+                    'sessions' => []
+                ];
+                $session_list = DB::table('sessions')
+                    ->where('sessions.room_id', '=', $room_list[$i]->id)
+                    ->select('sessions.id', 'sessions.title', 'description', 'sessions.speaker', 'start', 'end', 'type', 'cost')
+                    ->get();
+                $infor_room['sessions'] = $session_list;
+                array_push($infor_channel['rooms'], $infor_room);
+            }
+            array_push($event['channels'], $infor_channel);
+        }
+        $ticket_list = DB::table('event_tickets')
+            ->where('event_tickets.event_id', '=', $infor_event->id)
+            ->select('event_tickets.id', 'event_tickets.name', 'event_tickets.special_validity')
+            ->get();
+        $event['tickets'] = $ticket_list;
+        dd($event);
+        return $event;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 use App\Models\Event;
 use App\Models\Ticket;
@@ -218,5 +219,18 @@ class EventController extends Controller
             Event::updateInforEvent($currentUser->id, $slug, $infor_event_update);
         }
         return redirect('/event/detail/' . $slug_update);
+    }
+
+    //Api 
+    public function handleGetEvents()
+    {
+        $events = Event::getEvents();
+        return response()->json(['events' => $events]);
+    }
+
+    public function handleGetInforDetailEvent($organizer_slug, $event_slug)
+    {
+        $infor_detail_event = Event::getInforDetailEvent($organizer_slug, $event_slug);
+        return response()->json($infor_detail_event);
     }
 }

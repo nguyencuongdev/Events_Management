@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegistrationEventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/events', [EventController::class, 'handleGetEvents']);
+// Route::get(
+//     '/organizers/{organizer_slug}/events/{event_slug}',
+//     [EventController::class, 'handleGetInforDetailEvent']
+// );
+Route::post('/login', [AuthController::class, 'handleLoginClient']);
+Route::post('/logout', [AuthController::class, 'handleLogoutClient']);
+
+Route::post('/organizer/{organizer_slug}/events/{event_slug}/registration', [
+    RegistrationEventController::class, 'handleRegistrationEvent'
+]);
