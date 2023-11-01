@@ -107,16 +107,16 @@ class AuthController extends Controller
 
         $username = $jsonData['username'];
         $checkToken = $this->verifyToken($username, $token);
-        if ($checkToken) {
-            Attendee::updateInforLoginToken($username, '');
+        if (!$checkToken) {
             return response()->json([
-                'message' => 'Đăng xuất thành công'
-            ], 200)
-                ->withCookie(cookie('login_token', null, -1));
+                'message' => 'Token không hợp lệ'
+            ], 401);
         }
 
+        Attendee::updateInforLoginToken($username, '');
         return response()->json([
-            'message' => 'Token không hợp lệ'
-        ], 401);
+            'message' => 'Đăng xuất thành công'
+        ], 200)
+            ->withCookie(cookie('login_token', null, -1));
     }
 }

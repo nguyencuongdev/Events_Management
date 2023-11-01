@@ -25,6 +25,7 @@ Route::get('/events', [EventController::class, 'handleGetEvents']);
 Route::post('/login', [AuthController::class, 'handleLoginClient']);
 Route::post('/logout', [AuthController::class, 'handleLogoutClient']);
 
-Route::post('/organizer/{organizer_slug}/events/{event_slug}/registration', [
-    RegistrationEventController::class, 'handleRegistrationEvent'
-]);
+Route::post(
+    '/organizer/{organizer_slug}/events/{event_slug}/registration',
+    [RegistrationEventController::class, 'handleRegistrationEvent']
+);

@@ -14,7 +14,18 @@ class RegistrationEventController extends Controller
 {
     public static function getRegistedEvents(Request $request)
     {
+        $token = $request->input('token');
+        $data = $request->json()->all();
+        $username = $data['username'] ?? "";
+        $check_token = AuthController::verifyToken($username, $token);
+        if (!$check_token) {
+            return response()->json([
+                'message' => 'Người dùng chưa đăng nhập'
+            ], 401);
+        }
     }
+
+
     public static function handleRegistrationEvent(Request $request)
     {
         $token = $request->input('token');

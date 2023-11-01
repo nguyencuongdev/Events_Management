@@ -88,13 +88,18 @@ class SessionController extends Controller
         $check_room = DB::table('sessions')
             ->where([
                 ['room_id', '=', $id_room],
-                ['start', '>', strtotime($time_start_session)],
-                ['end', '<', strtotime($time_end_session)]
+                ['start', '>=', $time_start_session],
+                ['end', '<=', $time_end_session]
+            ])
+            ->orWhere([
+                ['room_id', '=', $id_room],
+                ['start', '<=', $time_start_session],
+                ['end', '>=', $time_end_session]
             ])
             ->get();
         if (count($check_room) > 0) $error_room = 'Phòng đang diễn ra 1 phiên khác!';
         if (
-            $error_title_session || $error_speaker_session || $error_cost_session || $error_time_start_session || $error_time_end_session || $error_description_session
+            $error_title_session || $error_speaker_session || $error_cost_session || $error_room || $error_time_start_session || $error_time_end_session || $error_description_session
         ) {
             return view('session.create', [
                 'currentUser' => $currentUser,
@@ -214,13 +219,20 @@ class SessionController extends Controller
         $check_room = DB::table('sessions')
             ->where([
                 ['room_id', '=', $id_room],
-                ['start', '>', strtotime($time_start_session)],
-                ['end', '<', strtotime($time_end_session)]
+                ['start', '>=', $time_start_session],
+                ['end', '<=', $time_end_session],
+                ['id', '!=', $session_id]
+            ])
+            ->orWhere([
+                ['room_id', '=', $id_room],
+                ['start', '<=', $time_start_session],
+                ['end', '>=', $time_end_session],
+                ['id', '!=', $session_id]
             ])
             ->get();
         if (count($check_room) > 0) $error_room = 'Phòng đang diễn ra 1 phiên khác!';
         if (
-            $error_title_session || $error_speaker_session || $error_cost_session || $error_time_start_session || $error_time_end_session || $error_description_session
+            $error_title_session || $error_speaker_session || $error_cost_session || $error_room || $error_time_start_session || $error_time_end_session || $error_description_session
         ) {
             return view('session.create', [
                 'currentUser' => $currentUser,
