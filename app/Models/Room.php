@@ -33,7 +33,7 @@ class Room extends Model
             $room_list = DB::table('rooms')
                 ->join('channels', 'channels.id', '=', 'rooms.channel_id')
                 ->where('channels.event_id', '=', $event_id)
-                ->select('rooms.name', 'rooms.capacity')
+                ->select('rooms.id', 'rooms.name', 'rooms.capacity', 'rooms.channel_id')
                 ->get();
             return $room_list;
         } catch (Exception $e) {

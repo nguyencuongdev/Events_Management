@@ -18,10 +18,10 @@ use App\Http\Controllers\RegistrationEventController;
 */
 
 Route::get('/events', [EventController::class, 'handleGetEvents']);
-// Route::get(
-//     '/organizers/{organizer_slug}/events/{event_slug}',
-//     [EventController::class, 'handleGetInforDetailEvent']
-// );
+Route::get(
+    '/organizers/{organizer_slug}/events/{event_slug}',
+    [EventController::class, 'handleGetInforDetailEvent']
+);
 Route::post('/login', [AuthController::class, 'handleLoginClient']);
 Route::post('/logout', [AuthController::class, 'handleLogoutClient']);
 

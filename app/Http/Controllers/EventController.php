@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Models\Channel;
+use App\Models\Organizer;
 use App\Models\Room;
 use App\Models\Session;
 
@@ -230,7 +231,79 @@ class EventController extends Controller
 
     public function handleGetInforDetailEvent($organizer_slug, $event_slug)
     {
-        $infor_detail_event = Event::getInforDetailEvent($organizer_slug, $event_slug);
-        return response()->json($infor_detail_event);
+        $infor_organizer = Organizer::getInforOrganizerBySlug($organizer_slug);
+        if (!$infor_organizer) {
+            return response()->json(['message' => 'Nhà tổ chức không tồn tại'], 404);
+        }
+
+        $infor_event = Event::getInforEvent($infor_organizer->id, $event_slug);
+        if (!$infor_event) {
+            return response()->json(['message' => 'Sự kiện không tồn tại'], 404);
+        }
+
+        $channel_list = Channel::getChannelsOfEvent($infor_event->id);
+        $room_list = Room::getRoomsOfEvent($infor_event->id);
+        $ticket_list = Ticket::getTicketsOfEvent($infor_event->id);
+        $session_list = Session::getSessionsOfEvent($infor_event->id);
+        $channelsAndRoomOfEvent = [];
+
+        $inforchannel = [
+            'id' => '',
+            'name' => '',
+            'rooms' => []
+        ];
+
+        $infor_room = [
+            'id' => '',
+            'name' => '',
+            'capacity' => 0,
+            'sessions' => []
+        ];
+
+        $infor_session = [
+            'id' => '',
+            'title' => '',
+            'description' => '',
+            'speaker' => '',
+            'start' => '',
+            'end' => '',
+            'type' => '',
+            'cost' => ''
+        ];
+
+        foreach ($channel_list as $channel) {
+            $inforchannel['id'] = $channel->id;
+            $inforchannel['name'] = $channel->name;
+            foreach ($room_list as $room) {
+                if ($room->channel_id == $channel->id) {
+                    $infor_room['id'] = $room->id;
+                    $infor_room['name'] = $room->name;
+                    $infor_room['capacity'] = $room->capacity;
+                    foreach ($session_list as $session) {
+                        if ($session->room_id == $room->id) {
+                            $infor_session['id'] = $session->id;
+                            $infor_session['title'] = $session->title;
+                            $infor_session['description'] = $session->description;
+                            $infor_session['speaker'] = $session->speaker;
+                            $infor_session['start'] = $session->start;
+                            $infor_session['end'] = $session->end;
+                            $infor_session['type'] = $session->type;
+                            $infor_session['cost'] = $session->cost;
+                            $infor_room['sessions'][] = $infor_session;
+                        }
+                    }
+                    $inforchannel['rooms'][] = $infor_room;
+                }
+            }
+            $channelsAndRoomOfEvent[] = $inforchannel;
+        }
+        return response()->json([
+            'id' => $infor_event->id,
+            'name' => $infor_event->name,
+            'slug' => $infor_event->slug,
+            'date' => $infor_event->date,
+            'channels' => $channelsAndRoomOfEvent,
+            'tickets' => $ticket_list
+        ], 200);
     }
 }

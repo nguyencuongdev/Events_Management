@@ -25,4 +25,15 @@ class Organizer extends Model
         } catch (Exception) {
         }
     }
+
+    public static function getInforOrganizerBySlug($slug)
+    {
+        try {
+            $infor = DB::table('organizers')
+                ->where('slug', '=', $slug)
+                ->first();
+            return $infor;
+        } catch (Exception) {
+        }
+    }
 }
