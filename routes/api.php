@@ -29,3 +29,5 @@ Route::post(
     '/organizer/{organizer_slug}/events/{event_slug}/registration',
     [RegistrationEventController::class, 'handleRegistrationEvent']
 );
+
+Route::get('/registrations', [RegistrationEventController::class, 'getRegistedEvents']);

@@ -95,7 +95,7 @@ class AuthController extends Controller
     public static function verifyToken($username, $token)
     {
         $data = Attendee::getLoginTokenAttendee($username);
-        if ($data->login_token === $token)
+        if ($data && ($data->login_token === $token))
             return true;
         return false;
     }
@@ -105,7 +105,7 @@ class AuthController extends Controller
         $jsonData = $request->json()->all();
         $token = $request->input('token');
 
-        $username = $jsonData['username'];
+        $username = $jsonData['username'] ?? '';
         $checkToken = $this->verifyToken($username, $token);
         if (!$checkToken) {
             return response()->json([

@@ -43,7 +43,9 @@ class Ticket extends Model
     public static function verifyTicket($ticket_id, $registration_time)
     {
         try {
-            $infor_ticket = DB::table('event_tickets')->where('event_tickets.id', $ticket_id)->first();
+            $infor_ticket = DB::table('event_tickets')
+                ->where('event_tickets.id', $ticket_id)
+                ->first();
             $check_ticket = true;
             if ($infor_ticket) {
                 $special_validity = $infor_ticket->special_validity ?? null;

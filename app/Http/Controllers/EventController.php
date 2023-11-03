@@ -297,6 +297,8 @@ class EventController extends Controller
             }
             $channelsAndRoomOfEvent[] = $inforchannel;
         }
+
+
         return response()->json([
             'id' => $infor_event->id,
             'name' => $infor_event->name,

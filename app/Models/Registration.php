@@ -45,4 +45,33 @@ class Registration extends Model
         } catch (Exception $e) {
         }
     }
+
+    public static function getRegistedOfAttendee($attendee_id)
+    {
+        try {
+            $registed_list = DB::table('registrations')->where('attendee_id', $attendee_id)->get();
+            return $registed_list;
+        } catch (Exception $e) {
+        }
+    }
+
+    public static function getEventRegistredOfAttendee($registed_ids)
+    {
+        try {
+            $events_list = DB::table('event_tickets')
+                ->join('events', 'events.id', '=', 'event_tickets.event_id')
+                ->join('registrations', 'registrations.ticket_id', '=', 'event_tickets.id')
+                ->whereIn('registrations.id', $registed_ids)
+                ->selectRaw(
+                    'events.*,
+                event_tickets.name as "ticket_name",
+                event_tickets.cost as "ticket_cost",
+                registrations.registration_time "registration_time",
+                registrations.id as "registration_id"'
+                )
+                ->get();
+            return $events_list;
+        } catch (Exception $e) {
+        }
+    }
 }

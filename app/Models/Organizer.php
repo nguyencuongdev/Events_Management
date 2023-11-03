@@ -36,4 +36,20 @@ class Organizer extends Model
         } catch (Exception) {
         }
     }
+
+    public static function getOrganizersByEventID($event_ids)
+    {
+        try {
+            $organizer_list = DB::table('organizers')
+                ->join('events', 'events.organizer_id', '=', 'organizers.id')
+                ->whereIn('events.id', $event_ids)
+                ->selectRaw(
+                    'organizers.id as "organizer_id", organizers.name as "organizer_name", organizers.slug as "organizer_slug"'
+                )
+                ->distinct()
+                ->get();
+            return $organizer_list;
+        } catch (Exception $e) {
+        }
+    }
 }
