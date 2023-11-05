@@ -76,28 +76,32 @@ class SessionController extends Controller
         if (!$time_end_session) $error_time_end_session = 'Không được để trống trường này!';
         if (!$description_session) $error_description_session = 'Không được để trống trường này!';
 
-        $reg_time = '/^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}/';
+        $reg_time = '/^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{1,2}$/';
         if ($time_start_session && !preg_match($reg_time, $time_start_session))
             $error_time_start_session = 'Thời gian không hợp lệ!';
         if (
-            $time_end_session && !preg_match($reg_time, $time_end_session) ||
-            (strtotime($time_end_session) < strtotime($time_start_session))
+            $time_end_session && (!preg_match($reg_time, $time_end_session) ||
+                (strtotime($time_end_session) < strtotime($time_start_session)))
         )
             $error_time_end_session = 'Thời gian không hợp lệ!';
 
-        $check_room = DB::table('sessions')
-            ->where([
-                ['room_id', '=', $id_room],
-                ['start', '>=', $time_start_session],
-                ['end', '<=', $time_end_session]
-            ])
-            ->orWhere([
-                ['room_id', '=', $id_room],
-                ['start', '<=', $time_start_session],
-                ['end', '>=', $time_end_session]
-            ])
-            ->get();
-        if (count($check_room) > 0) $error_room = 'Phòng đang diễn ra 1 phiên khác!';
+        if ($time_start_session && $time_end_session) {
+            $check_room = DB::table('sessions')
+                ->where([
+                    ['room_id', '=', $id_room],
+                    ['start', '>=', $time_start_session],
+                    ['end', '<=', $time_end_session]
+                ])
+                ->orWhere([
+                    ['room_id', '=', $id_room],
+                    ['start', '<=', $time_start_session],
+                    ['end', '>=', $time_end_session]
+                ])
+                ->get();
+            // dd($check_room);
+            (count($check_room) > 0) ? $error_room = 'Phòng đang diễn ra 1 phiên khác!' : '';
+        }
+
         if (
             $error_title_session || $error_speaker_session || $error_cost_session || $error_room || $error_time_start_session || $error_time_end_session || $error_description_session
         ) {
@@ -211,26 +215,29 @@ class SessionController extends Controller
         if ($time_start_session && !preg_match($reg_time, $time_start_session))
             $error_time_start_session = 'Thời gian không hợp lệ!';
         if (
-            $time_end_session && !preg_match($reg_time, $time_end_session) ||
-            (strtotime($time_end_session) < strtotime($time_start_session))
+            $time_end_session && (!preg_match($reg_time, $time_end_session) ||
+                (strtotime($time_end_session) < strtotime($time_start_session)))
         )
             $error_time_end_session = 'Thời gian không hợp lệ!';
 
-        $check_room = DB::table('sessions')
-            ->where([
-                ['room_id', '=', $id_room],
-                ['start', '>=', $time_start_session],
-                ['end', '<=', $time_end_session],
-                ['id', '!=', $session_id]
-            ])
-            ->orWhere([
-                ['room_id', '=', $id_room],
-                ['start', '<=', $time_start_session],
-                ['end', '>=', $time_end_session],
-                ['id', '!=', $session_id]
-            ])
-            ->get();
-        if (count($check_room) > 0) $error_room = 'Phòng đang diễn ra 1 phiên khác!';
+        if ($time_start_session && $time_end_session) {
+            $check_room = DB::table('sessions')
+                ->where([
+                    ['room_id', '=', $id_room],
+                    ['start', '>=', $time_start_session],
+                    ['end', '<=', $time_end_session],
+                    ['id', '!=', $session_id]
+                ])
+                ->orWhere([
+                    ['room_id', '=', $id_room],
+                    ['start', '<=', $time_start_session],
+                    ['end', '>=', $time_end_session],
+                    ['id', '!=', $session_id]
+                ])
+                ->get();
+            (count($check_room) > 0) ? $error_room = 'Phòng đang diễn ra 1 phiên khác!' : '';
+        }
+
         if (
             $error_title_session || $error_speaker_session || $error_cost_session || $error_room || $error_time_start_session || $error_time_end_session || $error_description_session
         ) {

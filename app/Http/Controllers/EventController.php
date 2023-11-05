@@ -73,10 +73,10 @@ class EventController extends Controller
         //Ngày diễn ra sự kiện có hợp lệ không;
         $currentDate = date('Y-m-d');
         $regx = '/^[a-z0-9-]+$/';
-        $regx_date = "/^\d{4}-\d{1,2}-\d{1,2}$/";
+        $regx_date = '/^\d{4}-\d{1,2}-\d{1,2}$/';
         if (!preg_match($regx, $slug))
             $error_slug = "Slug không được để trống và chỉ chứa các ký tự a-z, 0-9 và '-'";
-        if (!preg_match($regx_date, $date) && (strtotime($currentDate) > strtotime($date)))
+        if (!preg_match($regx_date, $date) || (strtotime($currentDate) > strtotime($date)))
             $error_date = "Ngày diễn ra sự kiện không hợp lệ!";
 
         //kiểm tra xem slug đã tồn tại chưa;
@@ -173,20 +173,17 @@ class EventController extends Controller
 
         //kiểm tra xem slug có hợp lệ không;
         //Ngày diễn ra sự kiện có hợp lệ không;
-        $currentDate = date('Y-m-d');
-        $regx = '/^[^a-z0-9-]+$/';
-        $regx_date = "/^\d{4}(-)\d{2}-\d{2}$/";
+        $regx = '/^[a-z0-9-]+$/';
+        $regx_date = '/^\d{4}(-)\d{1,2}-\d{1,2}$/';
 
-        if (preg_match($regx, $slug))
+        if (!preg_match($regx, $slug_update))
             $error_slug = "Slug không được để trống và chỉ chứa các ký tự a-z, 0-9 và '-'";
-        if (
-            !preg_match($regx_date, $date_update) && strtotime($currentDate) > strtotime($date_update)
-        )
+        if (!preg_match($regx_date, $date_update))
             $error_date = "Ngày diễn ra sự kiện không hợp lệ!";
 
         //kiểm tra xem slug đã tồn tại chưa;
         $check_slug = Event::getInforEvent($currentUser->id, $slug_update);
-        if ($check_slug && $check_slug->slug !== $slug_update)
+        if ($check_slug && ($check_slug->slug !== $slug_update))
             $error_slug = "Slug đã tồn tại cho 1 events khác!";
 
         //Nếu có 1 lỗi reder lại trang edit event;

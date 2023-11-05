@@ -27,7 +27,6 @@ class Session extends Model
                     'rooms.name as room_name',
                     'rooms.id as room_id'
                 )
-                ->orderBy('sessions.start', 'asc')
                 ->get();
 
             return $session_list;

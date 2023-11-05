@@ -119,8 +119,8 @@
                 @foreach ($session_list as $session)
                 <tr>
                     <td class="text-nowrap">
-                        {{ date('d-m-Y H:i:s',strtotime($session->start)) }} ->
-                        {{date('d-m-Y H:i:s',strtotime($session->end)) }}
+                        {{ date('d-m-Y H:i',strtotime($session->start)) }} ->
+                        {{date('d-m-Y H:i',strtotime($session->end)) }}
                     </td>
                     <td>{{ $session->type }}</td>
                     <td>
