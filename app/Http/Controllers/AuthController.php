@@ -67,8 +67,8 @@ class AuthController extends Controller
     {
         $username = $request->input('username');
         $registration_code = $request->input('registration_code');
-
         $user_infor = Attendee::getInfor($username);
+
         if (!$user_infor)
             return response()->json([
                 'message' => 'Đăng nhập không hợp lê!'
@@ -81,7 +81,7 @@ class AuthController extends Controller
         }
 
         $login_token = md5($user_infor->username);
-        Attendee::updateInforLoginToken($username, $login_token);
+        Attendee::saveLoginToken($username, $login_token);
         return response()->json([
             'firstname' => $user_infor->firstname,
             'lastname' => $user_infor->lastname,
@@ -92,28 +92,23 @@ class AuthController extends Controller
             ->withCookie('login_token', $login_token);
     }
 
-    public static function verifyToken($username, $token)
+    public static function verifyToken($token)
     {
-        $data = Attendee::getLoginTokenAttendee($username);
-        if ($data && ($data->login_token === $token))
-            return true;
-        return false;
+        $data = Attendee::getInforAttendeeByLoginToken($token);
+        return ($data) ?  true :  false;
     }
 
     function handleLogoutClient(Request $request)
     {
-        $jsonData = $request->json()->all();
         $token = $request->input('token');
-
-        $username = $jsonData['username'] ?? '';
-        $checkToken = $this->verifyToken($username, $token);
+        $checkToken = $this->verifyToken($token);
         if (!$checkToken) {
             return response()->json([
                 'message' => 'Token không hợp lệ'
             ], 401);
         }
 
-        Attendee::updateInforLoginToken($username, '');
+        Attendee::deleteLoginToken($token, '');
         return response()->json([
             'message' => 'Đăng xuất thành công'
         ], 200)

@@ -15,16 +15,14 @@ class RegistrationEventController extends Controller
 {
     public static function getRegistedEvents(Request $request)
     {
-        $data = $request->json()->all();
         $token = $request->input('token');
-        $username = $data['username'] ?? '';
-        $check_token = AuthController::verifyToken($username, $token);
+        $check_token = AuthController::verifyToken($token);
         if (!$check_token) {
             return response()->json([
                 'message' => 'Người dùng chưa đăng nhập'
             ], 401);
         }
-        $attendee_id = Attendee::getInfor($username)->id;
+        $attendee_id = Attendee::getInforAttendeeByLoginToken($token)->id;
         $registed_ticket_list = Registration::getRegistedOfAttendee($attendee_id);
         $registed_ids = [];
         foreach ($registed_ticket_list as $registed) {
@@ -78,32 +76,32 @@ class RegistrationEventController extends Controller
     }
 
 
-    public static function handleRegistrationEvent(Request $request, $event_slug)
+    public static function handleRegistrationEvent(Request $request)
     {
         $token = $request->input('token');
         $data = $request->json()->all();
-        $username = $data['username'] ?? "";
-        $check_token = AuthController::verifyToken($username, $token);
+        $check_token = AuthController::verifyToken($token);
 
         if (!$check_token) {
             return response()->json([
                 'message' => 'Người dùng chưa đăng nhập'
             ], 401);
         }
+
         $ticket_id = $data['ticket_id'] ?? null;
-        $attendee_id = Attendee::getInfor($username)->id;
+        $attendee_id = Attendee::getInforAttendeeByLoginToken($token)->id;
         $session_ids = $data['session_ids'] ?? [];
-        // $registration_time = $data['registration_time'];
+        $check_ticket = Ticket::verifyTicket($ticket_id, date('Y-m-d'));
+
+        if (!$check_ticket)
+            return response()->json([
+                'message' => 'Vé không sẵn có'
+            ], 401);
+
         $check_registed = Registration::checkRegistratedEvent($ticket_id, $attendee_id);
         if ($check_registed)
             return response()->json([
                 'message' => 'Người dùng đã đăng ký',
-            ], 401);
-
-        $check_ticket = Ticket::verifyTicket($data['ticket_id'], date('Y-m-d'));
-        if (!$check_ticket)
-            return response()->json([
-                'message' => 'Vé không sẵn có'
             ], 401);
 
         Registration::registrationEvent($attendee_id, $ticket_id, date('Y-m-d'), $session_ids);

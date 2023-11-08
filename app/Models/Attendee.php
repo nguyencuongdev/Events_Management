@@ -22,21 +22,31 @@ class Attendee extends Model
         }
     }
 
-    public static function updateInforLoginToken($username, $login_token)
+    public static function deleteLoginToken($login_token, $login_token_update)
     {
         try {
-            DB::table('attendees')->where('username', $username)->update([
-                'login_token' => $login_token
+            DB::table('attendees')->where('login_token', $login_token)->update([
+                'login_token' => $login_token_update
             ]);
         } catch (Exception $e) {
         }
     }
 
-    public static function getLoginTokenAttendee($username)
+    public static function saveLoginToken($username, $token)
     {
         try {
-            $login_token = DB::table('attendees')->where('username', $username)->select('login_token')->first();
-            return $login_token;
+            DB::table('attendees')->where('username', $username)->update([
+                'login_token' => $token
+            ]);
+        } catch (Exception $e) {
+        }
+    }
+
+    public static function getInforAttendeeByLoginToken($token)
+    {
+        try {
+            $infor_attendee = DB::table('attendees')->where('login_token', $token)->first();
+            return $infor_attendee;
         } catch (Exception $e) {
         }
     }

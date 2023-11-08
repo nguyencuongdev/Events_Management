@@ -290,9 +290,11 @@ class EventController extends Controller
                         }
                     }
                     $inforchannel['rooms'][] = $infor_room;
+                    $infor_room['sessions'] = [];
                 }
             }
             $channelsAndRoomOfEvent[] = $inforchannel;
+            $inforchannel['rooms'] = [];
         }
 
 
