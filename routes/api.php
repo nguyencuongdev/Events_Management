@@ -22,6 +22,7 @@ Route::get(
     '/organizers/{organizer_slug}/events/{event_slug}',
     [EventController::class, 'handleGetInforDetailEvent']
 );
+
 Route::post('/login', [AuthController::class, 'handleLoginClient']);
 Route::post('/logout', [AuthController::class, 'handleLogoutClient']);
 

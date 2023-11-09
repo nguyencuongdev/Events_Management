@@ -70,6 +70,7 @@ class RegistrationEventController extends Controller
                 }
             }
             $event_registed_list[] = $infor_event;
+            $infor_event['session_ids'] = [];
         }
 
         return response()->json($event_registed_list, 200);
