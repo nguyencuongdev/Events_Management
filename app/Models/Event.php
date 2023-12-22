@@ -32,6 +32,11 @@ class Event extends Model
         return $this->hasMany(EventTicket::class, 'event_id');
     }
 
+    public function rooms()
+    {
+        return $this->hasManyThrough(Room::class, Channel::class, 'event_id', 'channel_id');
+    }
+
     public function organizer()
     {
         return $this->belongsTo(Organizer::class, 'organizer_id');
