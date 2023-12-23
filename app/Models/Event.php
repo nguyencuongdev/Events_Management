@@ -48,6 +48,7 @@ class Event extends Model
         return $events;
     }
 
+
     public static function getInfor($organizer_id, $event_slug)
     {
         $event = Event::where([

@@ -23,7 +23,7 @@
         </h6>
         <ul class="nav flex-column mb-2">
             <li class="nav-item">
-                <a class="nav-link" href="/report/event/{{ $event->slug }}">
+                <a class="nav-link" href="/report/events/{{ $event->slug }}">
                     Công suất phòng
                 </a>
             </li>

@@ -23,4 +23,9 @@ class Session extends Model
     {
         return $this->belongsTo(Channel::class, 'channel_id');
     }
+
+    public function session_registrations()
+    {
+        return $this->hasMany(SessionRegistration::class, 'session_id');
+    }
 }

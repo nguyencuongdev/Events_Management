@@ -7,6 +7,7 @@ use  App\Http\Controllers\ChannelController;
 use  App\Http\Controllers\RoomController;
 use  App\Http\Controllers\SessionController;
 use App\Http\Controllers\EventTicketController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,7 @@ use App\Http\Controllers\EventTicketController;
 |
 */
 
+Route::get('/report/events/{slug}', [ReportController::class, 'reportCapacityRoom']);
 Route::get('/', [EventController::class, 'index']);
 Route::resource('events', EventController::class);
 
@@ -30,7 +32,6 @@ Route::resource('events.tickets', EventTicketController::class)->shallow();
 Route::resource('events.channels', ChannelController::class)->shallow();
 Route::resource('events.rooms', RoomController::class)->shallow();
 Route::resource('events.sessions', SessionController::class)->shallow();
-
 
 Route::fallback(function () {
     return view('error.404');

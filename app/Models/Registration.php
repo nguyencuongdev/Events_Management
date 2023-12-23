@@ -17,4 +17,8 @@ class Registration extends Model
     {
         return $this->belongsTo(EventTicket::class, 'ticket_id');
     }
+    public function session_registrations()
+    {
+        return $this->hasManyThrough(SessionRegistration::class, 'registration_id');
+    }
 }
