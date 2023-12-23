@@ -24,10 +24,6 @@ class EventTicket extends Model
         return $this->belongsTo(Event::class, 'event_id');
     }
 
-    public function registrations()
-    {
-        return $this->hasMany(Registration::class, 'ticket_id');
-    }
     public static function verifyTicket($ticket_id, $event_id)
     {
         $infor_ticket = EventTicket::where([

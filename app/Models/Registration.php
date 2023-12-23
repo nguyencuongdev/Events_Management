@@ -50,8 +50,4 @@ class Registration extends Model
         ]);
         return $id_registration;
     }
-    public function session_registrations()
-    {
-        return $this->hasManyThrough(SessionRegistration::class, 'registration_id');
-    }
 }
