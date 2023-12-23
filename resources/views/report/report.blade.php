@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<link rel="stylesheet" href="{{asset('assets/css/Chart.min.css')}}">
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -29,6 +30,7 @@
         </ul>
     </div>
 </nav>
+
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     <div class="border-bottom mb-3 pt-3 pb-2">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
@@ -39,27 +41,49 @@
 
     <div class="mb-3 pt-3 pb-2">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <h2 class="h4">Tạo kênh mới</h2>
+            <h2 class="h4">Công suất phòng</h2>
         </div>
     </div>
-
-    <form class="needs-validation" novalidate action="/events/{{ $event->slug }}/channels" method="POST">
-        @csrf
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputName">Tên</label>
-                <input type="text" class="form-control @error('name') is-invalid @enderror" id="inputName" name="name"
-                    placeholder="" value="">
-                @error('name')
-                <p class="invalid-feedback">{{ $message }}</p>
-                @enderror
-            </div>
-        </div>
-
-        <hr class="mb-4">
-        <button class="btn btn-primary" type="submit">Lưu kênh</button>
-        <a href="/events/{{ $event->slug }}" class="btn btn-link">Bỏ qua</a>
-    </form>
-
+    <canvas id="chart"></canvas>
 </main>
+<script src="{{ asset('assets/js/Chart.min.js') }}"></script>
+<script>
+    const sessions = @json($titleOfSessions);
+    const capacityRooms = @json($capacityOfRooms);
+    console.log(capacityRooms);
+    const amountAttendeeRegisted = @json($amountAttendeeRegisted);
+
+    const ctx = document.querySelector('#chart').getContext('2d');
+    const barChart = new Chart(ctx,{
+        type: 'bar',
+        data: {
+            labels: sessions,
+            datasets: [
+                {
+                    label: 'Số lượng người tham dự đã đăng ký',
+                    data: amountAttendeeRegisted,
+                    backgroundColor: amountAttendeeRegisted.map(
+                        (attendee,index) => (attendee > capacityRooms[index]) ? 'red' : '#14b8a6'
+                    )
+                },
+                {
+                    label: 'Công suất phòng',
+                    data: capacityRooms,
+                    backgroundColor: '#38bdf8',
+                },
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Báo cáo công suất phòng so với người tham dự',
+                position: 'bottom',
+            },
+            legend: {
+                display:true,
+                position: 'right',
+            }
+        }
+    })
+</script>
 @endsection

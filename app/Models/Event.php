@@ -2,32 +2,24 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
 
 class Event extends Model
 {
     use HasFactory;
     public $timestamps = false;
-
     protected $table = 'events';
     protected $primaryKey = 'id';
-    protected $fillable = [
-        'organizer_id',
-        'name',
-        'slug',
-        'date'
-    ];
+    protected $fillable = ['organizer_id', 'name', 'slug', 'date'];
 
-    public function tickets()
-    {
-        return $this->hasMany(EventTicket::class, 'event_id');
-    }
+    //xác định các trường sẽ bị ẩn đi khi chuyển record thành json hoặc mảng;
+    protected $hidden = ['organizer_id'];
 
-    public function organizer()
+    public function registrations()
     {
-        return $this->belongsTo(Organizer::class, 'organizer_id')->select('id', 'name', 'slug');
+        return $this->hasManyThrough(Registration::class, EventTicket::class, 'event_id', 'ticket_id');
     }
 
     public function channels()
@@ -35,33 +27,42 @@ class Event extends Model
         return $this->hasMany(Channel::class, 'event_id');
     }
 
-    public function registrations()
+    public function tickets()
     {
-        return $this->hasManyThrough(Registration::class, EventTicket::class, 'event_id', 'ticket_id');
+        return $this->hasMany(EventTicket::class, 'event_id');
     }
 
-    public static function getInforEvent($organizer_id, $event_slug)
+    public function rooms()
     {
-        try {
-            $infor_evnet = Event::where([
-                ['slug', $event_slug],
-                ['organizer_id', $organizer_id]
-            ])->first();
-            return $infor_evnet;
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        return $this->hasManyThrough(Room::class, Channel::class, 'event_id', 'channel_id');
+    }
+
+    public function organizer()
+    {
+        return $this->belongsTo(Organizer::class, 'organizer_id');
+    }
+
+    public static function getEventsOfOrganizer($organizer_id)
+    {
+        $events = Event::where('organizer_id', $organizer_id)->get();
+        return $events;
+    }
+
+    public static function getInfor($organizer_id, $event_slug)
+    {
+        $event = Event::where([
+            ['organizer_id', $organizer_id],
+            ['slug', $event_slug]
+        ])
+            ->first();
+        return $event;
     }
 
     public static function getEvents()
     {
-        try {
-            $events = Event::with('organizer')
-                ->where('date', '>=', date('Y-m-d'))
-                ->get();
-            return $events;
-        } catch (Exception $ex) {
-            echo $ex->getMessage();
-        }
+        $events = Event::with('organizer')
+            ->where('date', '>=', date('Y-m-d'))
+            ->get();
+        return $events;
     }
 }

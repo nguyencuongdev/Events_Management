@@ -10,13 +10,9 @@ class SessionRegistration extends Model
 {
     use HasFactory;
     public $timestamps = false;
-
     protected $table = 'session_registrations';
     protected $primaryKey = 'id';
-    protected $fillable = [
-        'registration_id',
-        'session_id'
-    ];
+    protected $fillable = ['registration_id', 'session_id'];
 
     public function session()
     {

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
@@ -39,18 +40,19 @@
     </div>
     <div class="mb-3 pt-3 pb-2">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <h2 class="h4">Tạo phòng mới</h2>
+            <h2 class="h4">Sửa thông tin phòng</h2>
         </div>
     </div>
 
-    <form class="needs-validation" novalidate action="/events/{{ $event->slug }}/rooms" method="POST">
+    <form class="needs-validation" novalidate action="/rooms/{{ $room->id }}" method="POST">
         @csrf
+        @method('PUT')
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputName">Tên</label>
                 <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="inputName" name="name"
-                    placeholder="" value="{{ old('name') }}">
+                    placeholder="" value="{{ $room ? $room->name : old('name') }}">
                 @error('name')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror
@@ -62,7 +64,9 @@
                 <label for="selectChannel">Kênh</label>
                 <select class="form-control" id="selectChannel" name="channel">
                     @foreach($channels as $channel)
-                    <option value="{{ $channel->id}}" @if(old('channel')==$channel->id) selected @endif
+                    <option value="{{ $channel->id}}" @if($room->channel->id==$channel->id ||
+                        old('channel')==$channel->id)
+                        selected @endif
                         >
                         {{$channel->name }}
                     </option>
@@ -75,7 +79,7 @@
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputCapacity">Công suất</label>
                 <input type="number" class="form-control @error('capacity') is-invalid @enderror" id="inputCapacity"
-                    name="capacity" placeholder="" value="{{ old('capacity') }}">
+                    name="capacity" placeholder="" value="{{ $room ? $room->capacity : old('capacity') }}">
                 @error('capacity')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror

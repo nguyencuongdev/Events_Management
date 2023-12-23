@@ -15,26 +15,31 @@
     <h1 class="h2">Quản lý sự kiện</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
       <div class="btn-group mr-2">
-        <a href="/new/event" class="btn btn-sm btn-outline-secondary">Tạo sự kiện mới</a>
+        <a href="/events/create" class="btn btn-sm btn-outline-secondary">Tạo sự kiện mới</a>
       </div>
     </div>
   </div>
 
   <div class="row events">
-    @foreach($events as $event)
+    @if(count($events) > 0)
+    @foreach ($events as $event)
     <div class="col-md-4">
       <div class="card mb-4 shadow-sm">
-        <a href="events/detail.html" class="btn text-left event">
+        <a href="/events/{{ $event->slug }}" class="btn text-left event">
           <div class="card-body">
             <h5 class="card-title">{{ $event->name }}</h5>
             <p class="card-subtitle">{{ date('d-m-Y',strtotime($event->date)) }}</p>
-            <hr />
-            <p class="card-text">{{ $event->registrations->counnt() }}</p>
+            <hr>
+            <p class="card-text">{{ $event->registrations->count() }} người đăng ký</p>
           </div>
         </a>
       </div>
     </div>
     @endforeach
+    @else
+    <h3 class="text-center col-12">Không có sự kiện nào</h3>
+    @endif
   </div>
+
 </main>
 @endsection

@@ -41,18 +41,19 @@
 
     <div class="mb-3 pt-3 pb-2">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <h2 class="h4">Tạo vé mới</h2>
+            <h2 class="h4">Sửa thông tin vé</h2>
         </div>
     </div>
 
-    <form class="needs-validation" novalidate action="/events/{{ $event->slug }}/tickets" method="POST">
+    <form class="needs-validation" novalidate action="/tickets/{{ $ticket->id }}" method="POST">
         @csrf
+        @method('PUT')
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputName">Tên</label>
                 <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="inputName" name="name"
-                    placeholder="" value="{{ old('name') }}">
+                    placeholder="" value="{{ $ticket ? $ticket->name : old('name') }}">
                 @error('name')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror
@@ -63,7 +64,7 @@
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputCost">Giá</label>
                 <input type="number" class="form-control @error('cost') is-invalid @enderror" id="inputCost" name="cost"
-                    placeholder="" value="{{ old('cost') ? old('cost') : 0 }}">
+                    placeholder="" value="{{ $ticket ? $ticket->cost : old('cost') }}">
                 @error('cost')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror
@@ -74,13 +75,18 @@
             <div class="col-12 col-lg-4 mb-3">
                 <label for="selectSpecialValidity">Hiệu lực đặc biệt</label>
                 <select class="form-control mb-3" id="specialValidity" name="special_validity">
-                    <option value="no" {{ old('special_validity')==='no' ? 'selected' : '' }}>
+                    <option value="no">
                         Không
                     </option>
-                    <option value="amount" {{ old('special_validity')==='amount' ? 'selected' : '' }}>
+                    <option value="amount" {{(old('special_validity')==='amount' || ($special_validity &&
+                        $special_validity->type ==='amount'))
+                        ?'selected': '' }}
+                        >
                         Số lượng giới hạn
                     </option>
-                    <option value="date" {{ old('special_validity')==='date' ? 'selected' : '' }}>
+                    <option value="date" {{(old('special_validity')==='date' || ($special_validity &&
+                        $special_validity->type === 'date')) ?
+                        'selected': '' }}>
                         Có thể mua đến ngày
                     </option>
                 </select>
@@ -88,7 +94,8 @@
                     <label for="amount">Số lượng vé tối đa được bán</label>
                     <input type="number" class="form-control 
                     {{ old('special_validity') === 'amount' && $errors->has('amount') ? 'is-invalid' : '' }}"
-                        id="amount" name="amount" placeholder="" value="{{ old('amount') ? old('amount') : 0 }}">
+                        id="amount" name="amount" placeholder=""
+                        value="{{ ($special_validity && $special_validity->type==='amount') ? $special_validity->amount :  old('amount') }}">
                     @if(old('special_validity') === 'amount' && $errors->has('amount'))
                     <p class="invalid-feedback">{{ $errors->first('amount') }}</p>
                     @endif
@@ -98,7 +105,8 @@
                     <label for="date">Vé có thể được bán đến</label>
                     <input type="text" class="form-control 
                     {{ old('special_validity') === 'date' && $errors->has('date') ? 'is-invalid' : '' }}" id="date"
-                        name="date" placeholder="yyyy-mm-dd HH:MM" value="{{ old('date') }}">
+                        name="date" placeholder="yyyy-mm-dd HH:MM"
+                        value="{{ ($special_validity && $special_validity->type==='date') ? $special_validity->date : old('date') }}">
                     @if(old('special_validity') === 'date' && $errors->has('date'))
                     <p class="invalid-feedback">{{ $errors->first('date') }}</p>
                     @endif
@@ -127,6 +135,7 @@
                     date.style.display = 'none';
                     break;
                 default:
+                    specialValitidy.selected = true;
                     date.style.display = 'none';
                     amount.style.display = 'none';
         }
@@ -136,17 +145,20 @@
             switch(type){
                 case 'date':
                     valueAmount.value = 0;
+                    valueAmount.disable = true;
                     amount.style.display = 'none';
                     date.style.display = 'block';
                     break;
                 case 'amount':
                     valueDate.value = '';
+                    valueDate.disable = true;
                     date.style.display = 'none';
                     amount.style.display = 'block';
                     break;
                 default:
                     valueDate.value = '';
                     valueAmount.value = 0;
+                    specialValitidy.selected = true;
                     date.style.display = 'none';
                     amount.style.display = 'none';
             }

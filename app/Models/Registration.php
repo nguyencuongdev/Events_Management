@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +9,6 @@ class Registration extends Model
 {
     use HasFactory;
     public $timestamps = false;
-
     protected $table = 'registrations';
     protected $primaryKey = 'id';
     protected $fillable = [
@@ -45,15 +43,15 @@ class Registration extends Model
 
     public static function registrationEvent($ticket_id, $attendee_id)
     {
-        try {
-            $id_registration = Registration::insertGetId([
-                'ticket_id' => $ticket_id,
-                'attendee_id' => $attendee_id,
-                'registration_time' => date('Y-m-d')
-            ]);
-            return $id_registration;
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $id_registration = Registration::insertGetId([
+            'ticket_id' => $ticket_id,
+            'attendee_id' => $attendee_id,
+            'registration_time' => date('Y-m-d')
+        ]);
+        return $id_registration;
+    }
+    public function session_registrations()
+    {
+        return $this->hasManyThrough(SessionRegistration::class, 'registration_id');
     }
 }

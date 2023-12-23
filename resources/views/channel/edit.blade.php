@@ -29,7 +29,6 @@
         </ul>
     </div>
 </nav>
-
 <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
     <div class="border-bottom mb-3 pt-3 pb-2">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
@@ -37,53 +36,29 @@
         </div>
         <span class="h6">{{ date('d-m-Y',strtotime($event->date)) }}</span>
     </div>
+
     <div class="mb-3 pt-3 pb-2">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center">
-            <h2 class="h4">Tạo phòng mới</h2>
+            <h2 class="h4">Sửa thông tin kênh</h2>
         </div>
     </div>
 
-    <form class="needs-validation" novalidate action="/events/{{ $event->slug }}/rooms" method="POST">
+    <form class="needs-validation" novalidate action="/channels/{{ $channel->id }}" method="POST">
         @csrf
+        @method('PUT')
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputName">Tên</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
                 <input type="text" class="form-control @error('name') is-invalid @enderror" id="inputName" name="name"
-                    placeholder="" value="{{ old('name') }}">
+                    placeholder="" value="{{ $channel || old('name') ? $channel->name : old('name') }}">
                 @error('name')
                 <p class="invalid-feedback">{{ $message }}</p>
                 @enderror
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="selectChannel">Kênh</label>
-                <select class="form-control" id="selectChannel" name="channel">
-                    @foreach($channels as $channel)
-                    <option value="{{ $channel->id}}" @if(old('channel')==$channel->id) selected @endif
-                        >
-                        {{$channel->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-12 col-lg-4 mb-3">
-                <label for="inputCapacity">Công suất</label>
-                <input type="number" class="form-control @error('capacity') is-invalid @enderror" id="inputCapacity"
-                    name="capacity" placeholder="" value="{{ old('capacity') }}">
-                @error('capacity')
-                <p class="invalid-feedback">{{ $message }}</p>
-                @enderror
-            </div>
-        </div>
-
         <hr class="mb-4">
-        <button class="btn btn-primary" type="submit">Lưu phòng</button>
+        <button class="btn btn-primary" type="submit">Lưu kênh</button>
         <a href="/events/{{ $event->slug }}" class="btn btn-link">Bỏ qua</a>
     </form>
 

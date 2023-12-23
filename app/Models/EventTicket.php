@@ -9,14 +9,15 @@ class EventTicket extends Model
 {
     use HasFactory;
     public $timestamps = false;
-
-    protected $table = 'event_tickets';
     protected $primaryKey = 'id';
-    protected $fillable = [
-        'event.id',
-        'name',
-        'cost',
-    ];
+    protected $table = 'event_tickets';
+    protected $fillable = ['event_id', 'name', 'cost', 'special_validity'];
+
+
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class, 'ticket_id');
+    }
 
     public function event()
     {
@@ -48,5 +49,10 @@ class EventTicket extends Model
             }
         }
         return true;
+    }
+    public static function getInfor($id)
+    {
+        $ticket = EventTicket::find($id);
+        return $ticket;
     }
 }

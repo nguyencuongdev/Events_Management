@@ -4,9 +4,7 @@
     <div class="sidebar-sticky">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="/">
-                    Quản lý sự kiện
-                </a>
+                <a class="nav-link active" href="/">Quản lý sự kiện</a>
             </li>
         </ul>
     </div>
@@ -24,30 +22,38 @@
         </div>
     </div>
 
-    <form class="needs-validation" novalidate action="/edit/events/{{ $inforEvent->slug }}" method="POST">
+    <form class="needs-validation" novalidate action="/events" method="POST">
         @csrf
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputName">Tên</label>
-                <!-- adding the class is-invalid to the input, shows the invalid feedback below -->
-                <input type="text" class="form-control is-invalid" id="inputName" name="name" placeholder="" value="">
-                <div class="invalid-feedback">
-                    Tên không được để trống.
-                </div>
+                <input type="text" class="form-control" id="inputName" name="name" placeholder=""
+                    value="{{ old('name') }}">
+                @error('name')
+                <p class="text-danger">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputSlug">Slug</label>
-                <input type="text" class="form-control" id="inputSlug" name="slug" placeholder="" value="">
+                <input type="text" class="form-control" id="inputSlug" name="slug" placeholder=""
+                    value="{{ old('slug') }}">
+                @error('slug')
+                <p class=" text-danger">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
         <div class="row">
             <div class="col-12 col-lg-4 mb-3">
                 <label for="inputDate">Ngày</label>
-                <input type="text" class="form-control" id="inputDate" name="date" placeholder="yyyy-mm-dd" value="">
+                <input type="date" class="form-control" id="inputDate" name="date" placeholder="yyyy-mm-dd"
+                    value="{{ old('date') }}">
+                @error('date')
+                <p class=" text-danger">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
