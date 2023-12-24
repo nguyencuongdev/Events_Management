@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\Room;
+use App\Http\Controllers\AuthController;
 
 
 use App\Models\Event;
