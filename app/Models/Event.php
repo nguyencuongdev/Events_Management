@@ -40,7 +40,7 @@ class Event extends Model
         return $this->hasManyThrough(Registration::class, EventTicket::class, 'event_id', 'ticket_id');
     }
 
-    public static function getInforEvent($organizer_id, $event_slug)
+    public static function getInfor($organizer_id, $event_slug)
     {
         try {
             $infor_evnet = Event::where([
