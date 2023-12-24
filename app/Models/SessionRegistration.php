@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +15,7 @@ class SessionRegistration extends Model
 
     public function session()
     {
-        return $this->belongsTo(SessionRegistration::class);
+        return $this->belongsTo(Session::class);
     }
 
     public function registration()
@@ -26,17 +25,13 @@ class SessionRegistration extends Model
 
     public static function registrationSession($registration_id, $session_ids = [])
     {
-        try {
-            $listInforSessionRegisted = [];
-            foreach ($session_ids as $session) {
-                $listInforSessionRegisted[] = [
-                    'registration_id' => $registration_id,
-                    'session_id' => $session
-                ];
-            }
-            SessionRegistration::insert($listInforSessionRegisted);
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        $listInforSessionRegisted = [];
+        foreach ($session_ids as $session) {
+            $listInforSessionRegisted[] = [
+                'registration_id' => $registration_id,
+                'session_id' => $session
+            ];
         }
+        SessionRegistration::insert($listInforSessionRegisted);
     }
 }

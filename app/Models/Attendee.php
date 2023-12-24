@@ -26,50 +26,34 @@ class Attendee extends Model
 
     public static function getInfor($last_name, $registration_code)
     {
-        try {
-            $attendee = Attendee::where([
-                ['lastname', $last_name],
-                ['registration_code', $registration_code]
-            ])
-                ->first();
-            return $attendee;
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $attendee = Attendee::where([
+            ['lastname', $last_name],
+            ['registration_code', $registration_code]
+        ])
+            ->first();
+        return $attendee;
     }
 
     public static function getInforByToken($token)
     {
-        try {
-            $attendee = Attendee::where('login_token', $token)->first();
-            return $attendee;
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $attendee = Attendee::where('login_token', $token)->first();
+        return $attendee;
     }
 
     public static function generateToken($attendee, $data_encode)
     {
-        try {
-            $token = md5($data_encode);
-            $attendee->login_token = $token;
-            $attendee->save();
-            return $token;
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $token = md5($data_encode);
+        $attendee->login_token = $token;
+        $attendee->save();
+        return $token;
     }
 
     public static function verifyToken($token)
     {
-        try {
-            $attendee = Attendee::where('login_token', $token)->first();
-            if (!$attendee) return false;
-            $attendee->login_token = '';
-            $attendee->save();
-            return true;
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $attendee = Attendee::where('login_token', $token)->first();
+        if (!$attendee) return false;
+        $attendee->login_token = '';
+        $attendee->save();
+        return true;
     }
 }

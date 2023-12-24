@@ -36,11 +36,6 @@ class Registration extends Model
         return $this->belongsTo(Event::class, 'event_id');
     }
 
-    public function session_ids()
-    {
-        return $this->hasMany(SessionRegistration::class, 'registration_id');
-    }
-
     public static function registrationEvent($ticket_id, $attendee_id)
     {
         $id_registration = Registration::insertGetId([

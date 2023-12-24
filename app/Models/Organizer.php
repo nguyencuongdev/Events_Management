@@ -11,7 +11,7 @@ class Organizer extends Model
     public $timestamps = false;
     protected $primaryKey = 'id';
     protected $table = 'organizers';
-    protected $hidden = ['password_hash'];
+    protected $hidden = ['email', 'password_hash'];
     protected $fillable = ['name', 'slug', 'email', 'password_hash'];
 
     public function events()
